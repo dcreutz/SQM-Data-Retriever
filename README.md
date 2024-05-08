@@ -1,12 +1,12 @@
 # SQM Data Retriever
 
-An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter:tm: data files.
+An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files.
 
-Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format ['International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format]('International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
+Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format [http://www.darksky.org/night-sky-conservation/248](http://www.darksky.org/night-sky-conservation/248) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
 
 The retriever can be configured to add attributes to the data including sun and moon position and illumination, regression analysis and image files.
 
-Designed as the backend for the [SQM Visualizer](https://...), it provides a full API (see src/sqm_responder.php for information).
+Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see src/sqm_responder.php for information).
 
 The software is licensed under the GNU Affero General Public License version 3, or (at your option) any later version.  The sofware was designed and developed by Darren Creutz.
 
@@ -16,9 +16,9 @@ The software is licensed under the GNU Affero General Public License version 3, 
 
 2. Extract the zip file and move the contents of the subfolder dist to the location on your web server you want it.  That is, the directory on your server should have the same contents as the dist folder.
 
-3. Copy (or symlink) your SQM data files into the data directory.
+3. Copy (or symlink) your SQM data files into the data directory, default is a directory named data in the same directory as sqm.php.
 
-4. [Recommended] Make the cache directory writeable by the web server user.  On shared hosting, this step usually isn't necessary; on a typical linux system, this means running chown to set the owner of the cache folder to www-data or www.
+4. [Recommended] Create the cache directory, default is a directory called cache in the same directory as data.  Make the cache directory writeable by the web server user.  On shared hosting, this step usually isn't necessary; on a typical linux system, this means running chown to set the owner of the cache folder to www-data or www.
 
 5. [Optional] If you have a camera taking images of the sky, copy (or symlink) the images in to the images directory.  The directory structure expected is iamges/YYYY-MM/YYYY-MM-DD/image-file-name, see the configuration section for more information.
 
