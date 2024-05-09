@@ -6,7 +6,7 @@
 		
 	/*	SQM Data Retriever configuration options */
 
-	/*	directory relative to index.php containing sqm data files
+	/*	directory relative to sqm.php containing sqm data files
 		
 		if using data from a single station, data files should be placed in this directory
 		if using data from multiple stations, each station should have a subdirectory of its files
@@ -25,7 +25,7 @@
 	
 	/*	directory relative to index.php to use for cacheing
 		
-		set to null to not cache best reading data
+		set to null to not cache
 		if cache_directory is not writeable no cacheing will occur */
 	$cache_directory = ".." . DIRECTORY_SEPARATOR . "cache";
 	

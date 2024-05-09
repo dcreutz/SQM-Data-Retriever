@@ -16,19 +16,25 @@ The SQM Data Retriever software is licensed under the GNU Affero General Public 
 
 2. Extract the zip file and move the contents of the subfolder dist to the location on your web server where you want it.  That is, the directory on your server should have (at least) the same contents as the dist folder.
 
-3. Copy (or symlink) your SQM data files into the data directory, default is a directory named data in the same directory as sqm.php.
+3. Create a directory 'data' in the same directory as sqm.php, then copy (or symlink) your SQM data files into the data directory.  (The location of the data directory can be changed in config.php, see the configuration section for more information).
 
-4. [Recommended] Create the cache directory, default is a directory called cache in the same directory as data.  Make the cache directory writeable by the web server user.  On a typical linux system, this means running chown to set the owner of the cache folder to www or www-data.
+4. [Recommended] Create a directory 'cache' in the same directory.  Make the cache directory writeable by the web server user.  On a typical linux system, this means running chown to set the owner of the cache folder to www or www-data.
 
-5. [Optional] If you have a camera taking images of the sky, copy (or symlink) the images in to the images directory.  The directory structure expected is iamges/YYYY-MM/YYYY-MM-DD/image-file-name, see the configuration section for more information.
+5. [Optional] If you have a camera taking images of the sky, create an 'images' directory, then copy (or symlink) the images in to the images directory.  The directory structure expected is images/YYYY-MM/YYYY-MM-DD/image-YYYYMMDDHHiiss.jpg, see the configuration section for information.
 
-6. [Optional] If you have images and would like the backend to automatically create thumbnails, make the resized_images directory writeable by the web server user.
+6. [Optional] If you have images and would like the backend to automatically create thumbnails, create a 'resized_images' directory writeable by the web server user.
 
 7. [Optional] Edit config.php to customize your installation.  See the configuration section for more information.
 
 8. [Optional] If using a large dataset, particularly if regression analysis and images are involved, run the included command line script bin/update_cache_cli.php (see below).
 
-9. [Optional] Create .info files in each data directory specifying information about the SQM.  The file should be named .info and have the same structure as the sample.info file included with the code.
+9. [Optional] Create .info files in each data directory specifying information about the SQM.  The file should be named .info and have the structure
+```
+	Name: <name>
+	Latitude: <latitude>
+	Longitude: <longitude>
+	Elevation: <elevation>
+```
 
 ## Data directory structure
 
