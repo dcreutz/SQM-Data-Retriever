@@ -65,7 +65,7 @@ function perform_includes_and_requires($php,&$required_once) {
 						perform_includes_and_requires(file($filename),$required_once)
 					);
 				} else {
-					array_push($result,"include('config.php');" . PHP_EOL);
+					array_push($result,"@include('config.php');" . PHP_EOL);
 				}
 			} else {
 				array_push($result,$orig_line);

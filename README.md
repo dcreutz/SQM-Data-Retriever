@@ -16,15 +16,15 @@ The SQM Data Retriever software is licensed under the GNU Affero General Public 
 
 2. Extract the zip file and move the contents of the subfolder dist to the location on your web server where you want it.  That is, the directory on your server should have (at least) the same contents as the dist folder.
 
-3. Create a directory 'data' in the same directory as sqm.php, then copy (or symlink) your SQM data files into the data directory.  (The location of the data directory can be changed in config.php, see the configuration section for more information).
+3. Create a directory 'data' in the same directory as sqm.php, then copy (or symlink) your SQM data files into the data directory.  (The location of the data directory can be changed in config.php, see the [configuration instructions](config.MD) for more information).
 
 4. [Recommended] Create a directory 'cache' in the same directory.  Make the cache directory writeable by the web server user.  On a typical linux system, this means running chown to set the owner of the cache folder to www or www-data.
 
-5. [Optional] If you have a camera taking images of the sky, create an 'images' directory, then copy (or symlink) the images in to the images directory.  The directory structure expected is images/YYYY-MM/YYYY-MM-DD/image-YYYYMMDDHHiiss.jpg, see the configuration section for information.
+5. [Optional] If you have a camera taking images of the sky, create an 'images' directory, then copy (or symlink) the images in to the images directory.  The directory structure expected is images/YYYY-MM/YYYY-MM-DD/image-YYYYMMDDHHiiss.jpg, see the [configuration instructions](config.MD) for information.
 
 6. [Optional] If you have images and would like the backend to automatically create thumbnails, create a 'resized_images' directory writeable by the web server user.
 
-7. [Optional] Edit config.php to customize your installation.  See the configuration section for more information.
+7. [Optional] Edit config.php to customize your installation.  See the [configuration instructions](config.MD) for more information.
 
 8. [Optional] If using a large dataset, particularly if regression analysis and images are involved, run the included command line script bin/update_cache_cli.php (see below).
 
@@ -61,10 +61,6 @@ Command line script to manually update the cache.  When working with large datas
 Note that this script must be run as the same server user as the web server runs as or after running it, the cache must be manually set to be readable and writeable by the web user.
 
 Optionally, a cron job can be configured to periodically update the cache.
-
-## Configuration options
-
-config.php specifies how the backend should operate.  See the comments in config.php for explanations of the options available and to change the directory locations of the data, cache, images, etc.
 
 ## Data collection
 
