@@ -39,8 +39,11 @@ interface SQM_Fileset {
 		where each readings is an array of values keyed by the datetime strings from the file */
 	public function new_readings_from(...$files);
 	
-	/* returns an SQM_Info object for this fileset */
+	/*	returns an SQM_Info object for this fileset */
 	public function sqm_info();
+	
+	/*	returns the parsed row of all entries in the data files for the given datetime */
+	public function data_columns_for($datetime);
 }
 
 // factory pattern to allow injection of different subclasses depending on cacheing
@@ -191,6 +194,10 @@ abstract class SQM_Fileset_Implementation implements SQM_Fileset {
 	
 	public function sqm_info() {
 		return $this->sqm_info;
+	}
+	
+	public function data_columns_for($datetime) {
+		return $this->file_manager->data_columns_for($datetime);
 	}
 }
 ?>

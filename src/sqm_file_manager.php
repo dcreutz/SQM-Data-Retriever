@@ -85,6 +85,16 @@ class SQM_File_Manager extends SQM_Directory {
 	public function last_reading_from($file) {
 		return $this->file_parsers[$file]->last_reading_from();
 	}
+	
+	public function data_columns_for($datetime) {
+		foreach ($this->file_parsers as $file => $parser) {
+			$data_columns_for = $parser->data_columns_for($datetime);
+			if ($data_columns_for) {
+				return $data_columns_for;
+			}
+		}
+		return null;
+	}
 }
 
 // factory pattern here so we can determine which sqm stations are available

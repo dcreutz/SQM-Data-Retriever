@@ -50,6 +50,14 @@ Options are true, false or 'only if not cacheing', and 'only if not cacheing' is
 
 Default is 'only if not cacheing'.
 
+### Add raw data
+
+$add_raw_data
+
+Whether to return the raw csv data along with the readings.  If enabled, each reading will have attached to it a 'raw' value which is a key value array keyed by csv column headings.
+
+Options are true, false and 'only if cacheing'.  Default is 'only if cacheing'.
+
 ### Add sun moon info
 
 $add_sun_moon_info

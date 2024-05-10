@@ -16,7 +16,7 @@ $disable = true;
 	
 
 
-include('config.php');
+@include('config.php');
 if (!isset($data_directory)) {
 	$data_directory = "data";
 }
@@ -31,6 +31,9 @@ if (!isset($default_twilight_type)) {
 }
 if (!isset($extended_time)) {
 	$extended_time = true;
+}
+if (!isset($add_raw_data)) {
+	$add_raw_data = 'only if cacheing';
 }
 if (!isset($add_sun_moon_info)) {
 	$add_sun_moon_info = 'only if cacheing';

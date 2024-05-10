@@ -25,9 +25,12 @@ class SQM_File_Parser {
 	private $max_index;
 	private $delimiter;
 	private $readings;
+	private $data_columns;
+	private $datetime_strings;
 	
 	private $comment_lines;
 	private $header_row;
+	private $headers;
 	private $first_row;
 	
 	// read through the first data entry in the file to determine the indices of msas and datetime
@@ -35,6 +38,8 @@ class SQM_File_Parser {
 		$this->file_path = $file_path;
 		$this->comment_lines = array();
 		$this->readings = array();
+		$this->data_columns = array();
+		$this->datetime_strings = array();
 		$this->indexes = false;
 		if ((!file_exists($file_path)) || (is_dir($file_path))) {
 			return;
@@ -63,7 +68,12 @@ class SQM_File_Parser {
 				$delimiter = SQM_File_Parser::get_delimiter($lowerline);
 				if ($delimiter) {
 					$this->header_row = str_getcsv($lowerline,$delimiter);
+					$this->headers = array();
 					foreach ($this->header_row as $index => $part) {
+						if ($part[0] == "#") {
+							$part = substr($part,1);
+						}
+						array_push($this->headers,trim($part));
 						if (str_contains($part,"local")) {
 							if (str_contains($part,"date")) {
 								if (str_contains($part,"time")) {
@@ -151,19 +161,28 @@ class SQM_File_Parser {
 		return false;
 	}
 	
+	private function datetime_string($datetime_string) {
+		return (new DateTime($datetime_string))->format("Y-m-d H:i:s");
+	}
+	
 	private function next_reading_datetime($line) {
 		$parts = str_getcsv($line,$this->delimiter);
 		if (count($parts) >= $this->max_index) {
-			$this->readings[$parts[$this->indexes['datetime']]] = $parts[$this->indexes['reading']];
+			$datetime_string = $parts[$this->indexes['datetime']];
+			$this->readings[$datetime_string] = $parts[$this->indexes['reading']];
+			$this->data_columns[$datetime_string] = $parts;
+			$this->datetime_strings[$this->datetime_string($datetime_string)] = $datetime_string;
 		}
 	}
 	
 	private function next_reading_date_and_time($line) {
 		$parts = str_getcsv($line,$this->delimiter);
 		if (count($parts) >= $this->max_index) {
-			$this->readings[
-				$parts[$this->indexes['date']] . ' ' . $parts[$this->indexes['time']]
-			] = $parts[$this->indexes['reading']];
+			$datetime_string =
+				$parts[$this->indexes['date']] . ' ' . $parts[$this->indexes['time']];
+			$this->readings[$datetime_string] = $parts[$this->indexes['reading']];
+			$this->data_columns[$datetime_string] = $parts;
+			$this->datetime_strings[$this->datetime_string($datetime_string)] = $datetime_string;
 		}
 	}
 
@@ -300,6 +319,24 @@ class SQM_File_Parser {
 			return new SQM_Info($name,$latitude,$longitude,$elevation);
 		}
 		return false;
+	}
+	
+	/*	returns the entire row of entries in the file for the given datetime
+		or null if no such datetime exists in the file
+		
+		only called if the SQM_Data_Attributes_From_Data_Files module is enabled
+		so don't compute the columns unless this is called */
+	public function data_columns_for($datetime) {
+		$datetime_string = $datetime->format("Y-m-d H:i:s");
+		if (isset($this->datetime_strings[$datetime_string])) {
+			$data_columns = $this->data_columns[$this->datetime_strings[$datetime_string]];
+			$result = array();
+			for ($i=0;$i<count($this->headers);$i++) {
+				$result[$this->headers[$i]] = trim($data_columns[$i]);
+			}
+			return $result;
+		}
+		return null;
 	}
 }
 ?>

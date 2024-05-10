@@ -60,6 +60,7 @@ class SQM_Dataset_Manager_Implementation implements SQM_Dataset_Manager {
 			$this->sqm_info->latitude,$this->sqm_info->longitude,$this->sqm_info->time_zone
 		);
 		$this->dataset->set_sqm_sun_moon_info($this->sqm_sun_moon_info);
+		$this->dataset->set_fileset($this->fileset);
 	}
 	
 	public function sqm_info() {

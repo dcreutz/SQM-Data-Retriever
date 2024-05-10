@@ -6,10 +6,10 @@
 		
 	/*	SQM Data Retriever configuration options */
 
-	/*	directory relative to index.php containing sqm data files
+	/*	directory relative to sqm.php containing sqm data files
 		
 		if using data from a single station, data files should be placed in this directory
-		if using data from multiple stations, each station should have a subdirectory of its files
+		if using data from multiple stations, each station should have a subdirectory for its files
 		stations will be identitifed internally by the names of the subdirectories
 		
 		if a file named .info is placed in the directory with the data files formatted as
@@ -23,9 +23,9 @@
 		creating such files is recommended as naming a station from data files is unreliable */
 	$data_directory = "data";
 	
-	/*	directory relative to index.php to use for cacheing
+	/*	directory relative to sqm.php to use for cacheing
 		
-		set to null to not cache best reading data
+		set to null to not cache
 		if cache_directory is not writeable no cacheing will occur */
 	$cache_directory = "cache";
 	
@@ -39,16 +39,10 @@
 		'only if not cacheing' is the preferred choice */
 	$trust_files = 'only if not cacheing';
 	
-	/*	whether to override the default script timeout when running
+	/*	whether to include the raw data from the csv files in the response
 	
-		this should be set to true when cacheing since the first pass can take significant time
-		if there are large datasets and regression analysis is being performed */
-	$extended_time = true;
-	
-	/*	allowed memory limit
-		on some shared hosting, this value may not be modifiable */
-	$sqm_memory_limit_if_cacheing = '256M';
-	$sqm_memory_limit_if_not_cacheing = '512M';
+		options are true, false or 'only if cacheing' */
+	$add_raw_data = 'only if cacheing';
 	
 	/*	whether the backend should add sun and moon location information to the data
 		
@@ -161,6 +155,17 @@
 		
 		note: the cache is only cleared if the process has the cache lock for obvious reasons */
 	$clear_cache_on_errors = true;
+	
+	/*	whether to override the default script timeout when running
+	
+		this should be set to true when cacheing since the first pass can take significant time
+		if there are large datasets and regression analysis is being performed */
+	$extended_time = true;
+	
+	/*	allowed memory limit
+		on some shared hosting, this value may not be modifiable */
+	// $sqm_memory_limit_if_cacheing = '256M';
+	// $sqm_memory_limit_if_not_cacheing = '512M';
 	
 	/*	whether to log recoverable errors in the web server error log */
 	$logging_enabled = true;

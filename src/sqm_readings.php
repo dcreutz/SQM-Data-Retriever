@@ -57,20 +57,10 @@ class SQM_Readings implements JsonSerializable {
 			'endDatetime'	=> SQM_Readings::format_datetime_json($this->end_datetime)
 		);
 		$result['readings'] = array();
-		if (count($this->datetimes) > 0) {
-			$attributes = array_keys($this->attributes[array_key_first($this->attributes)]);
-			foreach ($attributes as $attribute) {
-				$result[$attribute] = array();
-			}
-			foreach ($this->datetimes as $key => $datetime) {
-				$date_string = SQM_Readings::format_datetime_json($datetime);
-				$result['readings'][$date_string] = $this->values[$key];
-				foreach ($attributes as $attribute) {
-					if ($this->attributes[$key]) {
-						$result[$attribute][$date_string] = $this->attributes[$key][$attribute];
-					}
-				}
-			}
+		foreach ($this->datetimes as $key => $datetime) {
+			$date_string = SQM_Readings::format_datetime_json($datetime);
+			$result['readings'][$date_string] = $this->attributes[$key];
+			$result['readings'][$date_string]['reading'] = $this->values[$key];
 		}
 		return $result;
 	}

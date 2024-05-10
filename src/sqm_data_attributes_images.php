@@ -59,7 +59,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 	private static $old_time;
 
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
 	) {
 		$sunset_date = $sunset->format("Y-m-d");
 		$sunrise_date = $sunrise->format("Y-m-d");
@@ -107,7 +107,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 	
 	public static function add_best_nightly_attributes(
 		&$attributes,$date,$key,$datetime,$datetimes,$values,$night_attributes,
-		$sqm_sun_moon_info,$datetime_keys_at_night
+		$sqm_sun_moon_info,$fileset,$datetime_keys_at_night
 	) {
 		$attributes['image'] = $night_attributes[$key]['image'];
 	}
@@ -166,7 +166,7 @@ class SQM_Data_Attributes_Resize_Images_Module extends SQM_Data_Attributes_Modul
 	}
 	
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
 	) {
 		global $resized_widths;
 		$resized_name = array_key_first($resized_widths);
@@ -212,7 +212,7 @@ class SQM_Data_Attributes_Resize_Images_Module extends SQM_Data_Attributes_Modul
 	
 	public static function add_best_nightly_attributes(
 		&$attributes,$date,$key,$datetime,$datetimes,$values,$night_attributes,
-		$sqm_sun_moon_info,$datetime_keys_at_night
+		$sqm_sun_moon_info,$fileset,$datetime_keys_at_night
 	) {
 		global $resized_widths;
 		foreach ($resized_widths as $name => $resized_width) {

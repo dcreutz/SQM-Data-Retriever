@@ -57,6 +57,7 @@ class SQM_Dataset_Implementation implements SQM_Dataset {
 	private $best_nightly_readings;
 	private $sqm_sun_moon_info;
 	private $sqm_data_attributes;
+	private $sqm_fileset;
 	
 	public function __construct($sqm_data,$best_nightly_readings,$sqm_data_attributes) {
 		$this->sqm_data = $sqm_data;
@@ -71,6 +72,13 @@ class SQM_Dataset_Implementation implements SQM_Dataset {
 	public function set_sqm_sun_moon_info($sqm_sun_moon_info) {
 		$this->sqm_sun_moon_info = $sqm_sun_moon_info;
 		$this->sqm_data_attributes->set_sqm_sun_moon_info($sqm_sun_moon_info);
+	}
+	
+	// the dataset manager owns the fileset
+	// as such, it's not available when this object is constructed
+	public function set_fileset($fileset) {
+		$this->sqm_fileset = $fileset;
+		$this->sqm_data_attributes->set_fileset($fileset);
 	}
 	
 	public function all_readings_in_range($start_datetime,$end_datetime) { // DateTime objects

@@ -30,6 +30,10 @@ if ($perform_regression_analysis === true) {
 	SQM_Data_Attributes::include_module(SQM_Data_Attributes_Regression_Analysis_Module::class);
 }
 
+if ($add_raw_data === true) {
+	SQM_Data_Attributes::include_module(SQM_Data_Attributes_From_Data_Files::class);
+}
+
 $cacheing_enabled = false;
 if (isset($cache_directory) && $cache_directory) {
 	$cache_directory_path = $path . $cache_directory;
@@ -52,6 +56,12 @@ if (isset($cache_directory) && $cache_directory) {
 			$perform_regression_analysis = true;
 			SQM_Data_Attributes::include_module(
 				SQM_Data_Attributes_Regression_Analysis_Module::class
+			);
+		}
+		if ($add_raw_data === 'only if cacheing') {
+			$add_raw_data = true;
+			SQM_Data_Attributes::include_module(
+				SQM_Data_Attributes_From_Data_Files::class
 			);
 		}
 	} else {

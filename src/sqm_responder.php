@@ -45,17 +45,19 @@
 				type: string,
 				startDatetime: string,
 				endDatetime: string,
-				readings: array,
-				attribute: array
+				readings: array
 			}
 		}
 	where type is as above
 	startDatetime and endDatetime are the actual range returned
-	readings are the actual msas values, the array is keyed by datetime strings in the format
+	
+	readings is a key value array keyed by datetime string in the format
 		requested or in YYYY-MM-DD HH:mm:ii format if not specified
-	for every additional attribute, e.g. mean_r_squared or sun_position,
-		response will include a key of the attribute name pointing to an array
-		and the array will be keyed by the same datetime strings as the readings
+	
+	readings[datetime].reading is the actual msas value
+	readings[datetime].PROPERTY is the value of PROPERTY for that reading
+	
+	where PROPERTY is e.g. sun_position or mean_r_squared
 	
 	
 	Multiple requests can be packaged together as follows

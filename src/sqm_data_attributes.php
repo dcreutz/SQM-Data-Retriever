@@ -15,23 +15,25 @@
 
 	either method may be left unimplemented
 	
-	note that anytime best nightly attributes are computed, any attribvutes attached to the
+	note that anytime best nightly attributes are computed, any attributes attached to the
 	individual reading determined to be the best should probably be copied to the best reading
 	attributes array but this is not mandatory */
 abstract class SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
 	) {
 	}
 	
 	public static function add_best_nightly_attributes(
 		&$attributes,$date,$key,$datetime,$datetimes,$values,$night_attributes,
-		$sqm_sun_moon_info,$datetime_keys_at_night
+		$sqm_sun_moon_info,$fileset,$datetime_keys_at_night
 	) {
 	}
 }
 
 require_once('sqm_data_attributes_computer.php');
+
+require_once('sqm_data_attributes_from_data_files.php');
 
 class SQM_Data_Attributes {
 	public static function initialize() {
@@ -39,6 +41,10 @@ class SQM_Data_Attributes {
 	}
 	
 	public static function include_module($sqm_data_attributes_module) {
+		global $debug;
+		if ($debug) {
+			error_log("Including data attributes module " . $sqm_data_attributes_module);
+		}
 		if (!in_array($sqm_data_attributes_module,SQM_Data_Attributes::$modules)) {
 			array_push(SQM_Data_Attributes::$modules,$sqm_data_attributes_module);
 		}
@@ -48,9 +54,14 @@ class SQM_Data_Attributes {
 
 	private $sqm_data;
 	private $sqm_sun_moon_info;
+	private $fileset;
 	
 	public function set_sqm_sun_moon_info($sqm_sun_moon_info) {
 		$this->sqm_sun_moon_info = $sqm_sun_moon_info;
+	}
+	
+	public function set_fileset($fileset) {
+		$this->fileset = $fileset;
 	}
 	
 	public function set_data($sqm_data) {
@@ -78,7 +89,8 @@ class SQM_Data_Attributes {
 		$attributes = array_map(function ($datetime) { return array(); },$datetimes);
 		foreach (SQM_Data_Attributes::$modules as $module) {
 			$module::add_attributes_from(
-				$attributes,$datetimes,$values,$sunset,$sunrise,$this->sqm_sun_moon_info
+				$attributes,$datetimes,$values,$sunset,$sunrise,
+				$this->sqm_sun_moon_info,$this->fileset
 			);
 		}
 		return $attributes;
@@ -109,7 +121,7 @@ class SQM_Data_Attributes {
 		foreach (SQM_Data_Attributes::$modules as $module) {
 			$module::add_best_nightly_attributes(
 				$attributes,$date,$key,$datetime,$datetimes,$values,$night_attributes,
-				$this->sqm_sun_moon_info,$datetime_keys_at_night
+				$this->sqm_sun_moon_info,$this->fileset,$datetime_keys_at_night
 			);
 		}
 		return $attributes;
