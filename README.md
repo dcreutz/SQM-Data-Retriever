@@ -1,6 +1,6 @@
 # SQM Data Retriever
 
-An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files.
+An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files and attaching attributes such as sun and moon position information and linear regression analysis.  The code is designed to be extensible.
 
 Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format [http://www.darksky.org/night-sky-conservation/248](http://www.darksky.org/night-sky-conservation/248) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
 
