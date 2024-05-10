@@ -1,12 +1,10 @@
 # SQM Data Retriever
 
-An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files and attaching attributes such as sun and moon position information and linear regression analysis.  The code is designed to be extensible.
+An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files and attaching attributes such as sun and moon position information, linear regression analysis and image files.
 
 Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format [http://www.darksky.org/night-sky-conservation/248](http://www.darksky.org/night-sky-conservation/248) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
 
-The retriever can be configured to add attributes to the data including sun and moon position and illumination, regression analysis and image files.
-
-Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see src/sqm_responder.php for information).
+Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see src/sqm_responder.php for information) and is designed to be (relatively) easily extensible (see src/sqm_data_attributes.php and its subclasses for information).
 
 The SQM Data Retriever software is licensed under the GNU Affero General Public License version 3, or (at your option) any later version.  The sofware was designed and developed by Darren Creutz.
 
