@@ -7,12 +7,22 @@
 /*	the actual script to be HTTP POST requested
 	also allows for preloading info and readings in index.php
 	
-	loads config.php via wrapper script
-	then creates a global error handler (unless in debug mode)
-	then decodes the post data as a request
-	then initializes the SQM_Responder
-	then passes the request to the responder
-	and finally takes the response and returns it to the caller */
+	in standard mode
+		loads config.php via wrapper script
+		then creates a global error handler (unless in debug mode)
+		then decodes the post data as a request
+		then initializes the SQM_Responder
+		then passes the request to the responder
+		and finally takes the response and returns it to the caller 
+	
+	in preload mode
+		loads config.php via wrapper script
+		then creates the preload request object
+		then creates a global error handler (unless in debug mode)
+		then initializes the SQM_Responder
+		then passes the request to the responder
+		and finally outputs javascript for the preloaded response
+	*/
 	
 require_once('load_config.php');
 
@@ -60,7 +70,6 @@ if (isset($info_and_readings_preload) && $info_and_readings_preload === true) {
 	foreach ($requests as $key => $request) {
 		$responses[$key] = $sqm_responder->respond_to(array('request' => $request));
 	}
-	// in case of error, output nothing
 	if (!isset($responses['response']) || ($responses['response']['fail'] !== true)) {
 		echo '<script type="text/javascript">';
 		echo 'SQMRequest.preloadRequest(' . json_encode($info_and_readings_request) . ',' .  json_encode($responses['info_and_readings']) . ');';

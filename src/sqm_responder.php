@@ -138,6 +138,7 @@ class SQM_Responder {
 		return $processed;
 	}
 	
+	// return an array of sqm_ids from the request
 	private function sqm_ids_from($request) {
 		if ((isset($request['sqm_ids'])) && (!is_array($request['sqm_ids']))) {
 			$request['sqm_ids'] = array($request['sqm_ids']);
@@ -160,6 +161,7 @@ class SQM_Responder {
 		return array('valid'=>$valid_sqm_ids,'invalid'=>$invalid_sqm_ids);
 	}
 	
+	// return the dataset manager for the given sqm_id
 	private function dataset_manager_for($sqm_id) {
 		if ((!isset($this->dataset_managers[$sqm_id])) || (!$this->dataset_managers[$sqm_id])) {
 			$this->dataset_managers[$sqm_id] = SQM_Dataset_Manager_Factory::create($sqm_id);

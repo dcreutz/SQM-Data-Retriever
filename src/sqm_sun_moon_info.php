@@ -9,7 +9,7 @@
 class SQM_Sun_Moon_Info {
 	private $latitude;
 	private $longitude;
-	private $time_zone;
+	private $time_zone; // DateTimeZone object
 
 	public function __construct($latitude,$longitude,$time_zone) {
 		$this->latitude = $latitude;
@@ -31,7 +31,7 @@ class SQM_Sun_Moon_Info {
 		);
 	}
 	
-	// translate twilight types to suncalc keys
+	/*	translate twilight types to suncalc keys */
 	private function sunset_key($twilight_type) {
 		switch ($twilight_type) {
 			case 'civil':
@@ -58,6 +58,8 @@ class SQM_Sun_Moon_Info {
 		}
 	}
 	
+	/*	return the sunrise and sunset times
+		return 7pm to 5am in case of errors */
 	private function sun_datetimes($datetime,$twilight_type) {
 		if (!$this->latitude) {
 			$fake_sunset = (clone $datetime)->setTime(19,0);
@@ -88,7 +90,7 @@ class SQM_Sun_Moon_Info {
 		return array('sunset'=>$sunset,'sunrise'=>$sunrise);
 	}
 	
-	// sun_calc wrapper functions
+	/*	sun_calc wrapper functions */
 	private function suncalc($datetime) {
 		return new SunCalc($datetime,$this->latitude,$this->longitude);
 	}

@@ -3194,7 +3194,7 @@ class SQM_Date_Utils {
 class SQM_Sun_Moon_Info {
 	private $latitude;
 	private $longitude;
-	private $time_zone;
+	private $time_zone; 
 
 	public function __construct($latitude,$longitude,$time_zone) {
 		$this->latitude = $latitude;
@@ -3238,6 +3238,7 @@ class SQM_Sun_Moon_Info {
 				return 'astronomical_twilight_begin';
 		}
 	}
+	
 	
 	private function sun_datetimes($datetime,$twilight_type) {
 		if (!$this->latitude) {
@@ -3993,6 +3994,7 @@ class SQM_Responder {
 		return $processed;
 	}
 	
+	
 	private function sqm_ids_from($request) {
 		if ((isset($request['sqm_ids'])) && (!is_array($request['sqm_ids']))) {
 			$request['sqm_ids'] = array($request['sqm_ids']);
@@ -4014,6 +4016,7 @@ class SQM_Responder {
 		}
 		return array('valid'=>$valid_sqm_ids,'invalid'=>$invalid_sqm_ids);
 	}
+	
 	
 	private function dataset_manager_for($sqm_id) {
 		if ((!isset($this->dataset_managers[$sqm_id])) || (!$this->dataset_managers[$sqm_id])) {

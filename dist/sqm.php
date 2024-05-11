@@ -7,12 +7,22 @@
 /*	the actual script to be HTTP POST requested
 	also allows for preloading info and readings in index.php
 	
-	loads config.php via wrapper script
-	then creates a global error handler (unless in debug mode)
-	then decodes the post data as a request
-	then initializes the SQM_Responder
-	then passes the request to the responder
-	and finally takes the response and returns it to the caller */
+	in standard mode
+		loads config.php via wrapper script
+		then creates a global error handler (unless in debug mode)
+		then decodes the post data as a request
+		then initializes the SQM_Responder
+		then passes the request to the responder
+		and finally takes the response and returns it to the caller 
+	
+	in preload mode
+		loads config.php via wrapper script
+		then creates the preload request object
+		then creates a global error handler (unless in debug mode)
+		then initializes the SQM_Responder
+		then passes the request to the responder
+		and finally outputs javascript for the preloaded response
+	*/
 	
 
 	
@@ -3284,7 +3294,7 @@ class SQM_Date_Utils {
 class SQM_Sun_Moon_Info {
 	private $latitude;
 	private $longitude;
-	private $time_zone;
+	private $time_zone; 
 
 	public function __construct($latitude,$longitude,$time_zone) {
 		$this->latitude = $latitude;
@@ -3328,6 +3338,7 @@ class SQM_Sun_Moon_Info {
 				return 'astronomical_twilight_begin';
 		}
 	}
+	
 	
 	private function sun_datetimes($datetime,$twilight_type) {
 		if (!$this->latitude) {
@@ -4083,6 +4094,7 @@ class SQM_Responder {
 		return $processed;
 	}
 	
+	
 	private function sqm_ids_from($request) {
 		if ((isset($request['sqm_ids'])) && (!is_array($request['sqm_ids']))) {
 			$request['sqm_ids'] = array($request['sqm_ids']);
@@ -4104,6 +4116,7 @@ class SQM_Responder {
 		}
 		return array('valid'=>$valid_sqm_ids,'invalid'=>$invalid_sqm_ids);
 	}
+	
 	
 	private function dataset_manager_for($sqm_id) {
 		if ((!isset($this->dataset_managers[$sqm_id])) || (!$this->dataset_managers[$sqm_id])) {
@@ -4144,7 +4157,6 @@ if (isset($info_and_readings_preload) && $info_and_readings_preload === true) {
 	foreach ($requests as $key => $request) {
 		$responses[$key] = $sqm_responder->respond_to(array('request' => $request));
 	}
-	// in case of error, output nothing
 	if (!isset($responses['response']) || ($responses['response']['fail'] !== true)) {
 		echo '<script type="text/javascript">';
 		echo 'SQMRequest.preloadRequest(' . json_encode($info_and_readings_request) . ',' .  json_encode($responses['info_and_readings']) . ');';
