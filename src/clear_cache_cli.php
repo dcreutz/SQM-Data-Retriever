@@ -8,6 +8,14 @@
 
 	note: it will block until it obtains the cache lock */
 
+function sqm_error_log($msg) {
+	echo $msg;
+}
+if (!file_exists("config.php")) {
+	echo "This script must be run from the directory containing config.php";
+	exit();
+}
+
 require_once('load_config.php');
 require_once('sqm_cache.php');
 $path = is_dir($data_directory) ? "" : getcwd() . DIRECTORY_SEPARATOR;

@@ -142,14 +142,7 @@ function make_php($file) {
 // make a command line executable
 function make_cli($file) {
 	return  "#!/usr/bin/env php" . PHP_EOL . 
-			'<?php' . PHP_EOL . 
-			'function sqm_error_log($msg) {' . PHP_EOL .
-			'echo $msg . PHP_EOL;' . PHP_EOL .
-			'}' . PHP_EOL .
-			'if (!file_exists("config.php")) {' . PHP_EOL .
-			'echo "Script must be run from directory with config.php";' . PHP_EOL .
-			'exit();' . PHP_EOL .
-			'}' . PHP_EOL .
+			'<?php' . PHP_EOL .
 			perform($file) . PHP_EOL .
 			'?>' . PHP_EOL;
 }

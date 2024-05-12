@@ -12,6 +12,14 @@
 	note: it will block until it obtains the cache lock
 	and the cache will not be cleared if an error occurs */
 
+function sqm_error_log($msg) {
+	echo $msg;
+}
+if (!file_exists("config.php")) {
+	echo "This script must be run from the directory containing config.php";
+	exit();
+}
+
 require_once('load_config.php');
 $trust_files = false;
 $should_block_for_cacheing = true;
