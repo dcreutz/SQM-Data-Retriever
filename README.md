@@ -2,7 +2,7 @@
 
 An open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files and attaching attributes such as sun and moon position information, linear regression analysis and image files.
 
-Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format [http://www.darksky.org/night-sky-conservation/248](http://www.darksky.org/night-sky-conservation/248) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
+Works with files in the ['International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' format](https://darksky.org/app/uploads/bsk-pdf-manager/47_SKYGLOW_DEFINITIONS.PDF) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
 
 Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see src/sqm_responder.php for information) and is designed to be (relatively) easily extensible (see src/sqm_data_attributes.php and its subclasses for information).
 
