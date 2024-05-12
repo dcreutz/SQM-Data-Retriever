@@ -61,6 +61,7 @@ When working with large datasets, and most especially when resizing images, this
 Note that this script must be run as the same server user as the web server runs as or after running it, the cache must be manually set to be readable and writeable by the web user.
 
 Optionally, a cron job can be configured to periodically update the cache using a cron.d file (or crontab entry) similar to
+
 ```5 * * * * www-data cd /var/www/html/sqm; /var/www/html/sqm/bin/update_cache_cli.php > /dev/null 2>&1```
 
 ## Data collection
