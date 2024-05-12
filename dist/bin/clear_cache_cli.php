@@ -1,12 +1,5 @@
 #!/usr/bin/env php
 <?php
-function sqm_error_log($msg) {
-echo $msg . PHP_EOL;
-}
-if (!file_exists("config.php")) {
-echo "Script must be run from directory with config.php";
-exit();
-}
 /*	clear_cache_cli.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
@@ -15,6 +8,14 @@ exit();
 /*	command line script to clear the cache
 
 	note: it will block until it obtains the cache lock */
+
+function sqm_error_log($msg) {
+	echo $msg;
+}
+if (!file_exists("sqm.php")) {
+	echo "This script must be run from the directory containing config.php";
+	exit();
+}
 
 
 	

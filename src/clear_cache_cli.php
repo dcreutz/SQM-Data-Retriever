@@ -11,7 +11,7 @@
 function sqm_error_log($msg) {
 	echo $msg;
 }
-if (!file_exists("config.php")) {
+if (!file_exists("sqm.php")) {
 	echo "This script must be run from the directory containing config.php";
 	exit();
 }
