@@ -64,7 +64,7 @@ Optionally, a cron job can be configured to periodically update the cache.
 
 The software works well in conjunction with [PySQM](https://github.com/mireianievas/PySQM) performing the actual data collection.
 
-## Thanks
+## Acknowledgements
 
 Thanks to Bill Kowalik for sharing his regression analysis code which ours is loosely based on.
 Thanks to [suncalc-php](https://github.com/gregseth/suncalc-php).
