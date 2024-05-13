@@ -12,6 +12,11 @@
 	note: it will block until it obtains the cache lock
 	and the cache will not be cleared if an error occurs */
 
+if (php_sapi_name() != 'cli') {
+	echo "This script is for the command line";
+	exit();
+}
+
 function sqm_error_log($msg) {
 	echo $msg;
 }
