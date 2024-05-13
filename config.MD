@@ -8,7 +8,7 @@ All options in config.php are optional.
 
 ### Data directory
 
-$data_directory
+```$data_directory = <string>```
 
 The directory relative to sqm.php containing sqm data files.
 		
@@ -29,7 +29,7 @@ Default is to expect the data files to be in a directory 'data' in the same dire
 
 ### Cache directory
 
-$cache_directory
+```$cache_directory = <string>```
 
 The directory relative to sqm.php to use for cacheing.  Set this to null to not cache.  If the cache directory is not writeable by the web server user, no cacheing will occur.
 
@@ -37,7 +37,7 @@ Default is the directory 'cache' in the same directory as sqm.php.
 		
 ### Trust or distrust files
 
-$trust_files
+```$trust_files = true | false | 'only if cacheing'```
 
 Whether data files should be trusted to be named including YYYY-MM or YYYY-MM-DD, to have the data in chronological order and to end in newline characters.
 
@@ -52,7 +52,7 @@ Default is 'only if not cacheing'.
 
 ### Add raw data
 
-$add_raw_data
+```$add_raw_data = true | false | 'only if cacheing'```
 
 Whether to return the raw csv data along with the readings.  If enabled, each reading will have attached to it a 'raw' value which is a key value array keyed by csv column headings.
 
@@ -60,7 +60,7 @@ Options are true, false and 'only if cacheing'.  Default is 'only if cacheing'.
 
 ### Add sun moon info
 
-$add_sun_moon_info
+```$add_sun_moon_info = true | false | 'only if cacheing'```
 
 Whether the backend should add sun and moon location information to the data.
 		
@@ -70,7 +70,7 @@ Default is 'only if cacheing'.
 
 ### Regression analysis
 
-$perform_regression_analysis
+```$perform_regression_analysis = true | false | 'only if cacheing'```
 
 Whether to perform linear regression on the data to attempt to determine cloudiness.  The algorithm used is essentially the same as that due to Bill Kowalik which is used in the Unihedron software's Sun-Moon-MW-Clouds calculation.
 
@@ -82,6 +82,11 @@ $regression_time_range specifies the time range in minutes to perform regression
 
 ### Filtering
 
+```$filter_mean_r_squared = <number>```
+```$filter_sun_elevation = <number>```
+```$filter_moon_elevation = <number>```
+```$filter_moon_illumination = <number>```
+
 If regression analysis is enabled, $filter_mean_r_squared is the value which any reading with mean r^2 above is marked as filtered out.  For best nightly readings, both the best overall and the best of those not filtered out is returned.
 
 If adding sun and moon information is also enabled, $filter_sun_elevation will filter readings when the sun is above that value in degrees.  $filter_moon_elevation and $filter_moon_illumination in conjunction will filter data based on when the moon is both above that elevation and has illumination greater than the filter value.
@@ -90,7 +95,11 @@ In all cases, all readings are returned; the filtering simply means that reading
 
 ### Images
 
-$use_images
+```$use_images = true | false | 'only if cacheing'```
+```$image_directory = <string>```
+```$image_name_prefix_length = <number>```
+```$image_name_suffix_length = <number>```
+```$image_time_frame = <number>```
 
 If set to true and $image_directory is set to a directory (default is 'images' in the same directory as sqm.php), the retriever will scan the images folder looking for the image closest in time to the reading and attach the name of that file to the reading.
 
@@ -108,6 +117,10 @@ $use_images may be true, false or 'only if cacheing'.  By default, 'only if cach
 
 ### Resizing images
 
+```$resize_images = true | false```
+```$resized_images_directory = <string>```
+```$resized_widths = array(<string> => <number)```
+
 The retriever can automatically resize images to create thumbnails.
 
 If $resize_images is set to true and the $resized_images_directory is a writeable directory (default is 'resized_images'), the retriever will resize each image to widths defined in $resized_widths.  $resized_widths should be a key value array with entries such as 'thumbnail'=>200 indicating that a directory named 'thumbnail' inside 'resized_images' should contain an image with the same name as each image in 'images' but resized to a width of 200 pixels.
@@ -118,7 +131,7 @@ Default is false.
 
 ### Clear cache on errors
 
-$clear_cache_on_errors
+```$clear_cache_on_errors = true | false```
 
 If set to true, the cache will automatically be cleared when an error in the retriever occurs.  The most likely source of errors in the retriever is cache corruption so this option should be enabled if the application is likely to be used by multiple users.
 
@@ -128,6 +141,10 @@ Default is false.
 
 ### Time and memory limits
 
+```$extended_time = true | false```
+```$sqm_memory_limit_if_cacheing = '<number>MB'```
+```$sqm_memory_limit_if_not_cacheing = '<number>MB'```
+
 $extended_time can be set to true to allow the retriever to attempt to override the server's built-in timeout for php scripts.  Especially when resizing images, the initial run can be time consuming
 and this option is designed to avoid script timeouts.
 
@@ -135,5 +152,6 @@ $sqm_memory_limit_if_cacheing and $sqm_memory_limit_if_not_cacheing specify how 
 
 ### Logging
 
-If $enable_logging is true, the retriever will log recoverable errors such as directories not being writeable or data files not being parseable to the server's error log.
+```$enable_logging = true | false```
 
+If $enable_logging is true, the retriever will log recoverable errors such as directories not being writeable or data files not being parseable to the server's error log.
