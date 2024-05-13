@@ -97,11 +97,13 @@ In all cases, all readings are returned; the filtering simply means that reading
 
 ### Images
 
-```$use_images = true | false | 'only if cacheing'```
-```$image_directory = <string>```
-```$image_name_prefix_length = <number>```
-```$image_name_suffix_length = <number>```
-```$image_time_frame = <number>```
+```
+$use_images = true | false | 'only if cacheing'
+$image_directory = <string>
+$image_name_prefix_length = <number>
+$image_name_suffix_length = <number>
+$image_time_frame = <number>
+```
 
 If set to true and $image_directory is set to a directory (default is 'images' in the same directory as sqm.php), the retriever will scan the images folder looking for the image closest in time to the reading and attach the name of that file to the reading.
 
@@ -119,9 +121,11 @@ $use_images may be true, false or 'only if cacheing'.  By default, 'only if cach
 
 ### Resizing images
 
-```$resize_images = true | false```
-```$resized_images_directory = <string>```
-```$resized_widths = array(<string> => <number)```
+```
+$resize_images = true | false
+$resized_images_directory = <string>
+$resized_widths = array(<string> => <number)
+```
 
 The retriever can automatically resize images to create thumbnails.
 
@@ -143,9 +147,11 @@ Default is false.
 
 ### Time and memory limits
 
-```$extended_time = true | false```
-```$sqm_memory_limit_if_cacheing = '<number>MB'```
-```$sqm_memory_limit_if_not_cacheing = '<number>MB'```
+```
+$extended_time = true | false
+$sqm_memory_limit_if_cacheing = '<number>MB'
+$sqm_memory_limit_if_not_cacheing = '<number>MB'
+```
 
 $extended_time can be set to true to allow the retriever to attempt to override the server's built-in timeout for php scripts.  Especially when resizing images, the initial run can be time consuming
 and this option is designed to avoid script timeouts.
