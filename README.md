@@ -28,10 +28,10 @@ The SQM Data Retriever software is free and open-source, provided as-is and lice
 
 9. [Optional] Create .info files in each data directory specifying information about the SQM.  The file should be named .info and have the structure
 ```
-	Name: <name>
-	Latitude: <latitude>
-	Longitude: <longitude>
-	Elevation: <elevation>
+	Name: My SQM Station
+	Latitude: 30.23
+	Longitude: -110.45
+	Elevation: 100.67
 ```
 
 ## Data directory structure
@@ -58,7 +58,7 @@ Command line script to update the cache.  This script can only be run when in th
 
 When working with large datasets, and most especially when resizing images, this script should be used prior to the first browser call to the backend.
 
-Note that this script must be run as the same server user as the web server runs as or after running it, the cache must be manually set to be readable and writeable by the web user.
+Note that this script must be run as the same server user as the web server runs as or after running it, the cache must be manually set to be writeable by the web user.
 
 Optionally, a cron job can be configured to periodically update the cache using a cron.d file (or crontab entry) similar to
 

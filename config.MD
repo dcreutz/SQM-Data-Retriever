@@ -16,10 +16,10 @@ If using data from a single station, data files should be placed in this directo
 
 If a file named .info is placed in the directory with the data files formatted as
 ```
-	Name: <name>
-	Latitude: <latitude>
-	Longitude: <longitude>
-	Elevation: <elevation>
+	Name: My SQM Station
+	Latitude: 30.56
+	Longitude: -110.23
+	Elevation: 80.1
 ```
 then this information will be used to describe the station.
 
@@ -29,7 +29,7 @@ Default is to expect the data files to be in a directory 'data' in the same dire
 
 ### Cache directory
 
-```$cache_directory = <string>;```
+```$cache_directory = <string> | null;```
 
 The directory relative to sqm.php to use for cacheing.  Set this to null to not cache.  If the cache directory is not writeable by the web server user, no cacheing will occur.
 
@@ -37,7 +37,7 @@ Default is the directory 'cache' in the same directory as sqm.php.
 		
 ### Trust or distrust files
 
-```$trust_files = true | false | 'only if cacheing';```
+```$trust_files = true | false | 'only if not cacheing';```
 
 Whether data files should be trusted to be named including YYYY-MM or YYYY-MM-DD, to have the data in chronological order and to end in newline characters.
 
@@ -62,7 +62,7 @@ Options are true, false and 'only if cacheing'.  Default is 'only if cacheing'.
 
 ```$add_sun_moon_info = true | false | 'only if cacheing';```
 
-Whether the backend should add sun and moon location information to the data.
+Whether to add sun and moon location information to the data.
 		
 Options are true, false or 'only if cacheing', 'only if cacheing' is the preferred choice as this can take time.
 
@@ -70,9 +70,14 @@ Default is 'only if cacheing'.
 
 ### Regression analysis
 
-```$perform_regression_analysis = true | false | 'only if cacheing';```
+```
+$perform_regression_analysis = true | false | 'only if cacheing';
+$regression_time_range = <number>;
+$regression_averaging_time_range = <number>;
+$regression_time_shift = <number>;
+```
 
-Whether to perform linear regression on the data to attempt to determine cloudiness.  The algorithm used is essentially the same as that due to Bill Kowalik which is used in the Unihedron software's Sun-Moon-MW-Clouds calculation.
+Whether to perform linear regression on the data to attempt to determine cloudiness.  The algorithm used is based on the logic of the algorithm due to Bill Kowalik and adapted by Anthony Tekatch in the Unihedron software's Sun-Moon-MW-Clouds calculation.
 
 Options are true, false or 'only if cacheing'.
 
@@ -100,14 +105,16 @@ In all cases, all readings are returned; the filtering simply means that reading
 ```
 $use_images = true | false | 'only if cacheing';
 $image_directory = <string>;
+$image_directory_url = <string>;
+$image_name_format = <string>;
 $image_name_prefix_length = <number>;
 $image_name_suffix_length = <number>;
 $image_time_frame = <number>;
 ```
 
-If set to true and $image_directory is set to a directory (default is 'images' in the same directory as sqm.php), the retriever will scan the images folder looking for the image closest in time to the reading and attach the name of that file to the reading.
+If $use_images is set to true (or to 'only if cacheing' and caching is enabled) and $image_directory is set to a directory (default is 'images' in the same directory as sqm.php), the retriever will scan the images folder looking for the image closest in time to the reading and attach the name of that file to the reading.
 
-The directory structure must be images/YYYY-MM/YYYY-MM-DD/image-file-name where YYYY is the four digit year, MM is the two digit month and DD is the teo digit day.
+The directory structure must be images/YYYY-MM/YYYY-MM-DD/image-file-name where YYYY is the four digit year, MM is the two digit month and DD is the two digit day.
 
 $image_directory_url is the url of the images directory (which is simply 'images' in the default case).  $image_name_format is the datetime format of the datetime stamp in the image file name; valid values are those accepted by [PHP Datetime](https://www.php.net/manual/en/datetime.createfromformat.php).
 
@@ -125,9 +132,10 @@ $use_images may be true, false or 'only if cacheing'.  By default, 'only if cach
 $resize_images = true | false;
 $resized_images_directory = <string>;
 $resized_widths = [ <string> => <number>, ... ];
+$resized_directory_url = <string>;
 ```
 
-The retriever can automatically resize images to create thumbnails.
+The retriever can automatically resize images to create e.g. thumbnails.
 
 If $resize_images is set to true and the $resized_images_directory is a writeable directory (default is 'resized_images'), the retriever will resize each image to widths defined in $resized_widths.  $resized_widths should be a key value array with entries such as 'thumbnail'=>200 indicating that a directory named 'thumbnail' inside 'resized_images' should contain an image with the same name as each image in 'images' but resized to a width of 200 pixels.
 
@@ -139,7 +147,7 @@ Default is false.
 
 ```$clear_cache_on_errors = true | false;```
 
-If set to true, the cache will automatically be cleared when an error in the retriever occurs.  The most likely source of errors in the retriever is cache corruption so this option should be enabled if the application is likely to be used by multiple users.
+If set to true, the cache will automatically be cleared when an error in the retriever occurs.  The most likely source of errors in the retriever is cache corruption so this option should be enabled if the application is likely to be used publicly.
 
 Alternatively, the included scripts for clearing the cache can be used manually if an error occurs and persists.
 
