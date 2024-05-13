@@ -124,7 +124,7 @@ $use_images may be true, false or 'only if cacheing'.  By default, 'only if cach
 ```
 $resize_images = true | false;
 $resized_images_directory = <string>;
-$resized_widths = array(<string> => <number);
+$resized_widths = array(<string> => <number>;
 ```
 
 The retriever can automatically resize images to create thumbnails.
