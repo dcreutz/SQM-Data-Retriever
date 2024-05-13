@@ -82,13 +82,10 @@ $regression_time_range specifies the time range in minutes to perform regression
 
 ### Filtering
 
-```$filter_mean_r_squared = <number>```
-
-```$filter_sun_elevation = <number>```
-
-```$filter_moon_elevation = <number>```
-
-```$filter_moon_illumination = <number>```
+```$filter_mean_r_squared = <number>
+$filter_sun_elevation = <number>
+$filter_moon_elevation = <number>
+$filter_moon_illumination = <number>```
 
 If regression analysis is enabled, $filter_mean_r_squared is the value which any reading with mean r^2 above is marked as filtered out.  For best nightly readings, both the best overall and the best of those not filtered out is returned.
 
