@@ -98,7 +98,7 @@ if (!isset($resized_width)) {
 	$resized_widths = $resized_widths = array('display_image'=>800,'thumbnail'=>200);;
 }
 if (!isset($clear_cache_on_errors)) {
-	$clear_cache_on_errors = false;
+	$clear_cache_on_errors = true;
 }
 if (!isset($debug)) {
 	$debug = false;

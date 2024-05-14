@@ -1,10 +1,10 @@
 # SQM Data Retriever
 
-Open-source server-side backend for retrieving data from Unihedron Sky Quality Meter data files and attaching attributes such as sun and moon position information, linear regression analysis and image files.
+Open-source server-side backend for managing data collected by Unihedron Sky Quality Meters and attaching attributes such as sun and moon position information, linear regression analysis and image files.
 
 Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' [format](https://darksky.org/app/uploads/bsk-pdf-manager/47_SKYGLOW_DEFINITIONS.PDF) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
 
-Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see [src/sqm_responder.php](src/sqm_responder.php) for information) and is designed to be (relatively) easily extensible (see [src/sqm_data_attributes.php](src/sqm_data_attributes.php) and its subclasses for information).
+Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see [src/sqm_responder.php](src/sqm_responder.php) for information) and is designed to be (relatively) easily extensible (see [src/sqm_data_attributes.php](src/sqm_data_attributes.php) and its subclasses, e.g. [srx/sqm_data_attributes_computer.php](src/sqm_data_attributes_computers.php), for details).
 
 The SQM Data Retriever software is free and open-source, provided as-is and licensed under the GNU Affero General Public License version 3, or (at your option) any later version.  The sofware was designed and developed by Darren Creutz.
 
@@ -12,7 +12,7 @@ The SQM Data Retriever software is free and open-source, provided as-is and lice
 
 1. Download the SQM Data Retriever by clicking on the Code button at the top right and choosing Download Zip.
 
-2. Extract the zip file and move the contents of the subfolder dist to the location on your web server where you want it.  That is, the directory on your server should have (at least) the same contents as the dist folder.
+2. Extract the zip file and move the contents of the subfolder dist to a location on your web server of your choice.  That is, the directory on your server should have (at least) the same contents as the extracted dist folder.
 
 3. Create a directory 'data' in the same directory as sqm.php, then copy (or symlink) your SQM data files into the data directory.  (The location of the data directory can be changed in config.php, see the [configuration instructions](config.MD) for more information).
 
@@ -46,7 +46,7 @@ If cacheing is enabled, the file names can be anything.
 
 ### clear_cache.php
 
-Browser callable script to clear the cache.  Disabled by default, to enable it, edit the .php file and change $disable = true to $disable = false.  Ideally an unnecessary script but included since cache corruption can occur.
+Browser callable script to clear the cache.  Disabled by default, to enable it, edit the .php file and change the line ```$disable = true;``` to ```$disable = false;```.  Ideally an unnecessary script but included since cache corruption can occur when server connectivity is interrupted.
 
 ### bin/clear_cache_cli.php
 

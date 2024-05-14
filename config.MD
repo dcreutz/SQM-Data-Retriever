@@ -1,8 +1,8 @@
 # SQM Data Retriever Configuration
 
-The SQM Data Retriever configuration can be customized by editing the file config.php in the same directory as sqm.php.
+The SQM Data Retriever can be customized by editing the file config.php.
 
-All options in config.php are optional.
+All entries in config.php are optional.
 
 ## config.php
 
@@ -10,9 +10,9 @@ All options in config.php are optional.
 
 ```$data_directory = <string>;```
 
-The directory relative to sqm.php containing sqm data files.
+The directory relative to sqm.php containing the data files.
 		
-If using data from a single station, data files should be placed in this directory. If using data from multiple stations, each station should have a subdirectory inside the data directory for its files, e.g. data/sqm1/sqm1.dat.  Stations will be identitifed internally by the names of the subdirectories.
+If using data from a single station, data files should be placed in this directory. If using data from multiple stations, each station should have a subdirectory inside the data directory for its files, e.g. data/sqm1/sqm1_2024-04.dat, data/sqm2/sqm2_2023-08.dat etc.
 
 If a file named .info is placed in the directory with the data files formatted as
 ```
@@ -23,7 +23,7 @@ If a file named .info is placed in the directory with the data files formatted a
 ```
 then this information will be used to describe the station.
 
-If no such file exists, the data files will be parsed looking for the same information.  Creating such files is recommended as naming a station from data files is unreliable.
+If no such file exists, the data files will be parsed looking for the same information.  Creating such files is recommended as determining information for a station from data files may be unreliable.
 
 Default is to expect the data files to be in a directory 'data' in the same directory as sqm.php.
 
@@ -41,12 +41,12 @@ Default is the directory 'cache' in the same directory as sqm.php.
 
 Whether data files should be trusted to be named including YYYY-MM or YYYY-MM-DD, to have the data in chronological order and to end in newline characters.
 
-This option should not be enabled unless cacheing cannot be enabled and even then should only be enabled if the dataset is so large that not enabling it causes the application to be too slow.
+This option should not be enabled unless cacheing cannot be enabled and even then should only be enabled if the dataset is so large that not enabling it causes the response time to be too slow.
 	
-This option should only be used without cacheing and may result in unexpected behavior
+This option should only be used without cacheing and will result in unexpected behavior
 if combined with cacheing.
 
-Options are true, false or 'only if not cacheing', and 'only if not cacheing' is the preferred choice.
+Options are true, false or 'only if not cacheing'.
 
 Default is 'only if not cacheing'.
 
@@ -64,7 +64,7 @@ Options are true, false and 'only if cacheing'.  Default is 'only if cacheing'.
 
 Whether to add sun and moon location information to the data.
 		
-Options are true, false or 'only if cacheing', 'only if cacheing' is the preferred choice as this can take time.
+Options are true, false or 'only if cacheing'; 'only if cacheing' is the preferred choice as this can take time.
 
 Default is 'only if cacheing'.
 
@@ -77,7 +77,7 @@ $regression_averaging_time_range = <number>;
 $regression_time_shift = <number>;
 ```
 
-Whether to perform linear regression on the data to attempt to determine cloudiness.  The algorithm used is based on the logic of the algorithm due to Bill Kowalik and adapted by Anthony Tekatch in the Unihedron software's Sun-Moon-MW-Clouds calculation.
+$perform_regression_analysis controls whether to perform linear regression on the data to attempt to determine cloudiness.  The algorithm used is based on similar logic to that of the algorithm due to Bill Kowalik and adapted by Anthony Tekatch in the Unihedron software's Sun-Moon-MW-Clouds calculation.
 
 Options are true, false or 'only if cacheing'.
 
@@ -94,7 +94,7 @@ $filter_moon_elevation = <number>;
 $filter_moon_illumination = <number>;
 ```
 
-If regression analysis is enabled, $filter_mean_r_squared is the value which any reading with mean r^2 above is marked as filtered out.  For best nightly readings, both the best overall and the best of those not filtered out is returned.
+If regression analysis is enabled, $filter_mean_r_squared is the value which any reading with mean $r^2$ above is marked as filtered.  For best nightly readings, both the best overall and the best of those not filtered are returned.
 
 If adding sun and moon information is also enabled, $filter_sun_elevation will filter readings when the sun is above that value in degrees.  $filter_moon_elevation and $filter_moon_illumination in conjunction will filter data based on when the moon is both above that elevation and has illumination greater than the filter value.
 
@@ -124,7 +124,7 @@ For example, the [AllSky software](https://github.com/AllskyTeam/allsky) generat
 
 $image_time_frame is the time in seconds between when a reading was taken and an image was taken for which the image ought to be considered as connected to the reading; among the images within this time period of a reading, the closest in time will be used.
 
-$use_images may be true, false or 'only if cacheing'.  By default, 'only if cacheing' is used and the AllSky naming conventions are.  If $image_directory is not set or the directory does not exist, this is the same as $use_images being false.
+$use_images may be true, false or 'only if cacheing'.  By default, 'only if cacheing' and the AllSky naming conventions are used.  If $image_directory is not set or the directory does not exist, this is equivalent to $use_images being false.
 
 ### Resizing images
 
@@ -137,7 +137,7 @@ $resized_directory_url = <string>;
 
 The retriever can automatically resize images to create e.g. thumbnails.
 
-If $resize_images is set to true and the $resized_images_directory is a writeable directory (default is 'resized_images'), the retriever will resize each image to widths defined in $resized_widths.  $resized_widths should be a key value array with entries such as 'thumbnail'=>200 indicating that a directory named 'thumbnail' inside 'resized_images' should contain an image with the same name as each image in 'images' but resized to a width of 200 pixels.
+If $resize_images is set to true and the $resized_images_directory is a writeable directory (default is 'resized_images'), the retriever will resize each image to widths defined by $resized_widths.  $resized_widths is a key value array with entries such as 'thumbnail'=>200 indicating that a directory named 'thumbnail' inside 'resized_images' should be created and contain an image with the same name as each image in 'images' but resized to a width of 200 pixels.
 
 $resized_directory_url is the url of the resized images directory.
 
@@ -147,11 +147,11 @@ Default is false.
 
 ```$clear_cache_on_errors = true | false;```
 
-If set to true, the cache will automatically be cleared when an error in the retriever occurs.  The most likely source of errors in the retriever is cache corruption so this option should be enabled if the application is likely to be used publicly.
+If set to true, the cache will automatically be cleared when an error in the retriever occurs.  The most likely source of errors in the retriever is cache corruption so this option should be enabled if the application is for public use.
 
 Alternatively, the included scripts for clearing the cache can be used manually if an error occurs and persists.
 
-Default is false.
+Default is true.
 
 ### Time and memory limits
 
@@ -165,6 +165,8 @@ $extended_time can be set to true to allow the retriever to attempt to override 
 and this option is designed to avoid script timeouts.
 
 $sqm_memory_limit_if_cacheing and $sqm_memory_limit_if_not_cacheing specify how much memory the retriever should request from the server.  If not set, the retriever will work with the memory limit proscribed by the server.
+
+Note that on shared hosting, the server may not allow the retriever to request extended time or extra memory.
 
 ### Logging
 
