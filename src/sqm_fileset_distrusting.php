@@ -2,7 +2,7 @@
 /*	sqm_fileset_distrusting.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	SQM_Fileset class which does not make assumptions about filenames or chronological order
 

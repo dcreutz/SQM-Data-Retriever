@@ -2,7 +2,7 @@
 /*	initialize_sqm_responder.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	This script creates the actual SQM_Responder object
 

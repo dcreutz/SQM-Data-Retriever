@@ -2,7 +2,7 @@
 /*	sqm_data_in_memory.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Implementation of SQM_Data that resides in memory
 

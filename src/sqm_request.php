@@ -2,7 +2,7 @@
 /*	sqm_request.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Class representing a request object as defined in SQM_Responder */
 abstract class SQM_Request {

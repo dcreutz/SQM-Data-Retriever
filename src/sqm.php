@@ -2,7 +2,7 @@
 /*	sqm.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	the actual script to be HTTP POST requested
 	also allows for preloading info and readings in index.php

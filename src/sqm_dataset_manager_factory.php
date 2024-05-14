@@ -2,7 +2,7 @@
 /*	sqm_dataset_manager_factory.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Manages the interactions between the various factories required to construct an
 	SQM_Dataset_Manager object */

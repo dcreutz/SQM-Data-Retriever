@@ -2,7 +2,7 @@
 /*	clear_cache.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 
 /*	Browser loadable script to clear the cache
 	Recommended to be disabled so non-admin users cannot access it

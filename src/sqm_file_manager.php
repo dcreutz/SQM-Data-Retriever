@@ -2,7 +2,7 @@
 /*	sqm_file_manager.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Handles the actual interaction with the files on disk */
 require_once('sqm_directory.php');

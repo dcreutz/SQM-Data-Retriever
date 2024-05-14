@@ -2,7 +2,7 @@
 /*	sqm_data_on_disk.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Implementation of SQM_Data that stores data in the cache
 

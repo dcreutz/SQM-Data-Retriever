@@ -2,7 +2,7 @@
 /*	sqm_sun_moon_info.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 
 /*	Utilities for determining information about the sun and moon */
 

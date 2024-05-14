@@ -2,7 +2,7 @@
 /*	error_handler.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Sets up the global error handler when debugging is disabled
 	and the recoverable error logging function */

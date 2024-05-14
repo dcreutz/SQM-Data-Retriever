@@ -2,7 +2,7 @@
 /*	sqm_fileset_trusting.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Implements SQM_Fileset trusting that files are named including dates or months
 	and that files are in chronological order

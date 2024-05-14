@@ -2,7 +2,7 @@
 /*	sqm_data_attributes_computer.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	SQM_Data_Attributes_Module for counting the number of readings per night and associating
 	that to the best nightly readings as 'number_of_readings' */

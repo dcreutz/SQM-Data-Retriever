@@ -2,7 +2,7 @@
 /*	sqm_date_utils.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	Utility functions for parsing and managing dates and datetimes */
 class SQM_Date_Utils {

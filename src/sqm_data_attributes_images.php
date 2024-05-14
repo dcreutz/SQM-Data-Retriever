@@ -2,7 +2,7 @@
 /*	sqm_data_attributes_images.php
 	SQM Data Retriever
 	(c) 2024 Darren Creutz
-	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE */
+	Licensed under the GNU AFFERO GENERAL PUBLIC LICENSE v3 */
 	
 /*	SQM_Data_Attributes_Module for attaching images to the data
 
