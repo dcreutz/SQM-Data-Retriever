@@ -4,7 +4,7 @@ Open-source server-side backend for managing data collected by Unihedron Sky Qua
 
 Works with files in the 'International Dark Sky Association (IDA) NSBM Community Standards for Reporting Skyglow Observations' [format](https://darksky.org/app/uploads/bsk-pdf-manager/47_SKYGLOW_DEFINITIONS.PDF) and files in the format output by the Unihedron software feature 'sun-moon-mw-clouds'.
 
-Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see [src/sqm_responder.php](src/sqm_responder.php) for information) and is designed to be (relatively) easily extensible (see [src/sqm_data_attributes.php](src/sqm_data_attributes.php) and its subclasses, e.g. [srx/sqm_data_attributes_computer.php](src/sqm_data_attributes_computers.php), for details).
+Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-Visualizer), it provides a full API (see [src/sqm_responder.php](src/sqm_responder.php) for information) and is designed to be (relatively) easily extensible (see [src/sqm_data_attributes.php](src/sqm_data_attributes.php) and its subclasses, e.g. [src/sqm_data_attributes_computer.php](src/sqm_data_attributes_computer.php), for details).
 
 The SQM Data Retriever software is free and open-source, provided as-is and licensed under the GNU Affero General Public License version 3, or (at your option) any later version.  The sofware was designed and developed by Darren Creutz.
 
