@@ -19,7 +19,7 @@ if (php_sapi_name() != 'cli') {
 }
 
 function sqm_error_log($msg) {
-	echo $msg;
+	echo $msg . "\n";
 }
 if (!file_exists("sqm.php")) {
 	echo "This script must be run from the directory containing config.php";
