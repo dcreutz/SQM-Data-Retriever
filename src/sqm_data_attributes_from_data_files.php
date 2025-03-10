@@ -7,7 +7,7 @@
 /*	SQM_Data_Attributes_Module for including the raw data from the csv files */
 class SQM_Data_Attributes_From_Data_Files extends SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		foreach ($datetimes as $key => $datetime) {
 			$data_columns = $fileset->data_columns_for($datetime);

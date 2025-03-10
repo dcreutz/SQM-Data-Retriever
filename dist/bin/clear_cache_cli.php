@@ -30,6 +30,9 @@ if (!file_exists("sqm.php")) {
 if (!isset($data_directory)) {
 	$data_directory = "data";
 }
+if (!isset($update_cache_cli_only)) {
+	$update_cache_cli_only = false;
+}
 if (!isset($read_only_mode)) {
 	$read_only_mode = false;
 }
@@ -209,9 +212,14 @@ class SQM_Cache_Factory {
 	private $cache_directory;
 	private $file_handle;
 	private $has_lock;
+	private $force_read_only;
 	
 	public static function initialize($cache_directory,$should_block) {
-		SQM_Cache_Factory::$instance = new SQM_Cache_Factory($cache_directory,$should_block);
+		SQM_Cache_Factory::$instance = new SQM_Cache_Factory($cache_directory,$should_block,false);
+	}
+	
+	public static function initialize_read_only($cache_directory) {
+		SQM_Cache_Factory::$instance = new SQM_Cache_Factory($cache_directory,false,true);
 	}
 	
 	
@@ -219,22 +227,25 @@ class SQM_Cache_Factory {
 		return !SQM_Cache_Factory::$instance->has_lock;
 	}
 	
-	private function __construct($cache_directory,$should_block) {
+	private function __construct($cache_directory,$should_block,$force_read_only) {
 		$this->has_lock = false;
 		$this->cache_directory = $cache_directory;
-		$this->file_handle =
-			fopen($this->cache_directory . DIRECTORY_SEPARATOR . ".sqm_cache_lock_file","w");
-		if ($should_block) {
-			if (flock($this->file_handle,LOCK_EX)) {
-				$this->has_lock = true;
+		$this->force_read_only = $force_read_only;
+		if (!$force_read_only) {
+			$this->file_handle =
+				fopen($this->cache_directory . DIRECTORY_SEPARATOR . ".sqm_cache_lock_file","w");
+			if ($should_block) {
+				if (flock($this->file_handle,LOCK_EX)) {
+					$this->has_lock = true;
+				} else {
+					fclose($this->file_handle);
+				}
 			} else {
-				fclose($this->file_handle);
-			}
-		} else {
-			if (flock($this->file_handle,LOCK_EX|LOCK_NB)) {
-				$this->has_lock = true;
-			} else {
-				fclose($this->file_handle);
+				if (flock($this->file_handle,LOCK_EX|LOCK_NB)) {
+					$this->has_lock = true;
+				} else {
+					fclose($this->file_handle);
+				}
 			}
 		}
 	}
@@ -250,6 +261,9 @@ class SQM_Cache_Factory {
 	}
 	
 	protected function build($sqm_id) {
+		if ($this->force_read_only) {
+			return new SQM_Cache_Read_Only($this->cache_directory . DIRECTORY_SEPARATOR . $sqm_id);
+		}
 		global $read_only_mode;
 		if ($this->has_lock && !$read_only_mode) {
 			return new SQM_Cache($this->cache_directory . DIRECTORY_SEPARATOR . $sqm_id);

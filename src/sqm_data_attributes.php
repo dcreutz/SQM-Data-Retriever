@@ -20,7 +20,7 @@
 	attributes array but this is not mandatory */
 abstract class SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 	}
 	
@@ -90,7 +90,7 @@ class SQM_Data_Attributes {
 		foreach (SQM_Data_Attributes::$modules as $module) {
 			$module::add_attributes_from(
 				$attributes,$datetimes,$values,$sunset,$sunrise,
-				$this->sqm_sun_moon_info,$this->fileset
+				$this->sqm_sun_moon_info,$this->fileset,$this->sqm_data->sqmid()
 			);
 		}
 		return $attributes;

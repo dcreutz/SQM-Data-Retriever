@@ -20,6 +20,7 @@ If a file named .info is placed in the directory with the data files formatted a
 	Latitude: 30.56
 	Longitude: -110.23
 	Elevation: 80.1
+	Timezone: America/Los_Angeles
 ```
 then this information will be used to describe the station.
 
@@ -114,7 +115,7 @@ $image_time_frame = <number>;
 
 If $use_images is set to true (or to 'only if cacheing' and caching is enabled) and $image_directory is set to a directory (default is 'images' in the same directory as sqm.php), the retriever will scan the images folder looking for the image closest in time to the reading and attach the name of that file to the reading.
 
-The directory structure must be images/YYYY-MM/YYYY-MM-DD/image-file-name where YYYY is the four digit year, MM is the two digit month and DD is the two digit day.
+The directory structure must be images/SQM/YYYY-MM/YYYY-MM-DD/image-file-name where YYYY is the four digit year, MM is the two digit month and DD is the two digit day.  SQM is the name of the corresponding data folder.
 
 $image_directory_url is the url of the images directory (which is simply 'images' in the default case).  $image_name_format is the datetime format of the datetime stamp in the image file name; valid values are those accepted by [PHP Datetime](https://www.php.net/manual/en/datetime.createfromformat.php).
 
@@ -152,6 +153,12 @@ If set to true, the cache will automatically be cleared when an error in the ret
 Alternatively, the included scripts for clearing the cache can be used manually if an error occurs and persists.
 
 Default is true.
+
+### Update cache from command line only
+
+```$update_cache_cli_only = true | false;```
+
+If set to true, the cache will only be updated by the command line utility and web access will not trigger reading the files for new data.  Only enable this if you have arranged a cron job or the equivalent to run the command line utility to update the cache.
 
 ### Time and memory limits
 

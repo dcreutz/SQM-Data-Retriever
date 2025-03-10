@@ -29,6 +29,10 @@ require_once('load_config.php');
 $trust_files = false;
 $should_block_for_cacheing = true;
 $clear_cache_on_errors = false;
+$is_cli = true;
+
+$sqm_memory_limit_if_cacheing = '1G';
+$extended_time = false;
 
 include('initialize_sqm_responder.php');
 

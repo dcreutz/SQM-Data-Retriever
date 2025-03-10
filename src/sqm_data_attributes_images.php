@@ -26,11 +26,15 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 	}
 	
 	// build a list of all files in the image directory
-	private static function build_file_list($date,$timezone) {
-		if (!isset(SQM_Data_Attributes_Images_Module::$image_file_datetimes[$date])) {
-			SQM_Data_Attributes_Images_Module::$image_file_datetimes[$date] = array();
+	private static function build_file_list($sqm_id,$date,$timezone) {
+		if (!isset(SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id])) {
+			SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id] = array();
+		}
+		if (!isset(SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$date])) {
+			SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$date] = array();
 			$directory = SQM_Data_Attributes_Images_Module::$image_directory . 
-				DIRECTORY_SEPARATOR . substr($date,0,7) . DIRECTORY_SEPARATOR . $date;
+				DIRECTORY_SEPARATOR . $sqm_id . DIRECTORY_SEPARATOR . 
+				substr($date,0,7) . DIRECTORY_SEPARATOR . $date;
 			if (file_exists($directory) && is_dir($directory)) {
 				global $image_name_format;
 				global $image_name_prefix_length;
@@ -46,7 +50,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 					// then $datetime should be a validly formatted $datetime
 					// createFromFormat returns false if it cannot parse the string
 					if ($datetime) {
-						SQM_Data_Attributes_Images_Module::$image_file_datetimes[$date]
+						SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$date]
 							[$file] = $datetime;
 					} else {
 						sqm_error_log("Could not format datetime from " . $file);
@@ -59,12 +63,12 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 	private static $old_time;
 
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		$sunset_date = $sunset->format("Y-m-d");
 		$sunrise_date = $sunrise->format("Y-m-d");
-		SQM_Data_Attributes_Images_Module::build_file_list($sunset_date,$sunset->getTimezone());
-		SQM_Data_Attributes_Images_Module::build_file_list($sunrise_date,$sunrise->getTimezone());
+		SQM_Data_Attributes_Images_Module::build_file_list($sqm_id,$sunset_date,$sunset->getTimezone());
+		SQM_Data_Attributes_Images_Module::build_file_list($sqm_id,$sunrise_date,$sunrise->getTimezone());
 		foreach ($datetimes as $key => $datetime) {
 			if (isset($attributes[$key]['image']) && $attributes[$key]['image']) {
 				continue;
@@ -72,7 +76,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 			$closest_datetime = SQM_Data_Attributes_Images_Module::$old_time;
 			$closest_file = null;
 			$closest_date = $sunset_date;
-			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sunset_date] as 
+			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$sunset_date] as 
 					$file => $dt) {
 				if (abs(intval($dt->format("U")) - intval($datetime->format("U"))) <
 					abs(intval($closest_datetime->format("U")) - intval($datetime->format("U")))) {
@@ -80,7 +84,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 						$closest_file = $file;
 				}
 			}
-			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sunrise_date] as 
+			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$sunrise_date] as 
 					$file => $dt) {
 				if (abs(intval($dt->format("U")) - intval($datetime->format("U"))) <
 					abs(intval($closest_datetime->format("U")) - intval($datetime->format("U")))) {
@@ -97,6 +101,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 					$image_time_frame)) {
 				$attributes[$key]['image'] = 
 					SQM_Data_Attributes_Images_Module::$image_directory_url
+					. DIRECTORY_SEPARATOR . $sqm_id
 					. DIRECTORY_SEPARATOR . substr($closest_date,0,7) . DIRECTORY_SEPARATOR .
 					$closest_date . DIRECTORY_SEPARATOR . $closest_file;
 			} else {
@@ -148,7 +153,7 @@ class SQM_Data_Attributes_Resize_Images_Module extends SQM_Data_Attributes_Modul
 		sqm_error_log("Resizing image " . $image_path,2);
 		global $extended_time;
 		if ($extended_time) {
-			set_time_limit(30);
+			set_time_limit(300);
 		}
 		$path = SQM_Data_Attributes_Resize_Images_Module::extract_path($resized_path);
 		if (!is_dir($path)) {
@@ -166,7 +171,7 @@ class SQM_Data_Attributes_Resize_Images_Module extends SQM_Data_Attributes_Modul
 	}
 	
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		global $resized_widths;
 		$resized_name = array_key_first($resized_widths);

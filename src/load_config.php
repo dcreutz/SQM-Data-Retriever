@@ -13,6 +13,9 @@ include('..' . DIRECTORY_SEPARATOR . 'config.php');
 if (!isset($data_directory)) {
 	$data_directory = "data";
 }
+if (!isset($update_cache_cli_only)) {
+	$update_cache_cli_only = false;
+}
 if (!isset($read_only_mode)) {
 	$read_only_mode = false;
 }

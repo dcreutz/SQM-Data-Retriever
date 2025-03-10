@@ -12,10 +12,16 @@ require_once('sqm_data.php');
 require_once('sqm_cache.php');
 
 class SQM_Data_On_Disk extends SQM_Data {
+	private $sqm_id;
 	private $cache;
 	
-	public function __construct($cache) {
+	public function __construct($sqm_id,$cache) {
+		$this->sqm_id = $sqm_id;
 		$this->cache = $cache;
+	}
+	
+	public function sqmid() {
+		return $this->sqm_id;
 	}
 	
 	public function dates() {
@@ -83,7 +89,7 @@ class SQM_Data_On_Disk_Factory extends SQM_Data_Factory {
 	}
 
 	protected function build_sqm_data($sqm_id) {
-		return new SQM_Data_On_Disk(SQM_Cache_Factory::create($sqm_id . "_all"));
+		return new SQM_Data_On_Disk($sqm_id,SQM_Cache_Factory::create($sqm_id . "_all"));
 	}
 	
 	protected function build_best_nightly_data($sqm_id) {

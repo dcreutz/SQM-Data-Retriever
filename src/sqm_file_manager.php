@@ -60,6 +60,7 @@ class SQM_File_Manager extends SQM_Directory {
 		if ($this->file_exists(".info")) {
 			$lines = explode("\n",file_get_contents($this->file_path(".info")));
 			$elevation = null;
+			$timezone = null;
 			foreach ($lines as $line) {
 				if (str_starts_with($line,"Name: ")) {
 					$name = substr($line,6);
@@ -69,10 +70,16 @@ class SQM_File_Manager extends SQM_Directory {
 					$longitude = floatval(substr($line,11));
 				} elseif (str_starts_with($line,"Elevation: ")) {
 					$elevation = substr($line,11);
+				} elseif (str_starts_with($line,"Timezone: ")) {
+					try {
+						$timezone = new DateTimeZone(substr($line,10));
+					} catch (Exception $e) {
+						sqm_error_log("Invalid timezone " + substr($line,10));
+					}
 				}
 			}
 			if (isset($name) && isset($latitude) && isset($longitude)) {
-				return new SQM_Info($name,$latitude,$longitude,$elevation);
+				return new SQM_Info($name,$latitude,$longitude,$elevation,$timezone);
 			}
 		}
 		return null;
@@ -87,11 +94,15 @@ class SQM_File_Manager extends SQM_Directory {
 	}
 	
 	public function data_columns_for($datetime) {
+		$result = array('exists' => true);
 		foreach ($this->file_parsers as $file => $parser) {
 			$data_columns_for = $parser->data_columns_for($datetime);
 			if ($data_columns_for) {
-				return $data_columns_for;
+				$result = array_merge($result,$data_columns_for);
 			}
+		}
+		if (count($result) > 1) {
+			return $result;
 		}
 		return null;
 	}

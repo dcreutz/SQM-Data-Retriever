@@ -12,11 +12,17 @@ class SQM_Data_In_Memory extends SQM_Data {
 	public $datetimes_by_date;
 	public $values_by_date;
 	public $attributes_by_date;
+	private $sqm_id;
 	
-	public function __construct() {
+	public function __construct($sqm_id = ".") {
+		$this->sqm_id = $sqm_id;
 		$this->datetimes_by_date = array();
 		$this->values_by_date = array();
 		$this->attributes_by_date = array();
+	}
+	
+	public function sqmid() {
+		return $this->sqm_id;
 	}
 	
 	// create an SQM_Data object from raw fileset readings
@@ -109,7 +115,7 @@ class SQM_Data_In_Memory_Factory extends SQM_Data_Factory {
 	}
 	
 	protected function build_sqm_data($sqm_id) {
-		return new SQM_Data_In_Memory();
+		return new SQM_Data_In_Memory($sqm_id);
 	}
 	
 	protected function build_best_nightly_data($sqm_id) {

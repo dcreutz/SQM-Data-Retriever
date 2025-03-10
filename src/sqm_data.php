@@ -7,6 +7,8 @@
 /*	Represents the actual data, including msas values and other attributes */
 
 abstract class SQM_Data {
+	public abstract function sqmid();
+
 	//	returns an array of strings formatted YYYY-mm-dd listing all dates data exists for
 	public abstract function dates();
 	

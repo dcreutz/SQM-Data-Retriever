@@ -37,10 +37,23 @@ if ($add_raw_data === true) {
 $cacheing_enabled = false;
 if (isset($cache_directory) && $cache_directory) {
 	$cache_directory_path = $path . $cache_directory;
-	if ((is_dir($cache_directory_path)) && (is_writeable($cache_directory_path))) {
-		$cacheing_enabled = true;
+	if (is_dir($cache_directory_path)) {
 		require_once('sqm_cache.php');
-		SQM_Cache_Factory::initialize($cache_directory_path,$should_block_for_cacheing);
+		if (($update_cache_cli_only === true) && (!isset($is_cli) || ($is_cli !== true))) {
+			SQM_Cache_Factory::initialize_read_only($cache_directory_path);
+			$cacheing_enabled = true;
+		} else {
+			if (is_writeable($cache_directory_path)) {
+				SQM_Cache_Factory::initialize($cache_directory_path,$should_block_for_cacheing);
+				$cacheing_enabled = true;
+			} else {
+				sqm_error_log("Cache directory is not writeable");
+			}
+		}
+	} else {
+		sqm_error_log("Cache directory is not a directory");
+	}
+	if ($cacheing_enabled) {
 		if (SQM_Cache_Factory::is_read_only()) {
 			$read_only_mode = true;
 		}
@@ -64,8 +77,6 @@ if (isset($cache_directory) && $cache_directory) {
 				SQM_Data_Attributes_From_Data_Files::class
 			);
 		}
-	} else {
-		sqm_error_log("SQM Cache directory is not a directory or is not writeable");
 	}
 }
 
@@ -137,7 +148,7 @@ if (($trust_files === true) || (($trust_files == 'only if not cacheing') && !$ca
 	SQM_Fileset_Distrusting_Factory::initialize();
 }
 
-// if we have no access to the cache (and cacheing is enabled), never look at the files
+// if we have no write access to the cache (and cacheing is enabled), never look at the files
 if ($cacheing_enabled && $read_only_mode) {
 	require_once('sqm_fileset_no_new.php');
 	SQM_Fileset_No_New_Factory::initialize();

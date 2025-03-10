@@ -131,7 +131,7 @@ class SQM_Dataset_Manager_Implementation implements SQM_Dataset_Manager {
 		global $extended_time;
 		foreach ($files as $file) {
 			if ($extended_time) {
-				set_time_limit(30);
+				set_time_limit(300);
 			}
 			$changed_readings = $this->fileset->new_readings_from($file);
 			if ($changed_readings) {

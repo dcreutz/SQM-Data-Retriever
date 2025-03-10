@@ -32,6 +32,7 @@ The SQM Data Retriever software is free and open-source, provided as-is and lice
 	Latitude: 30.23
 	Longitude: -110.45
 	Elevation: 100.67
+	Timezone: America/Los_Angeles
 ```
 
 ## Data directory structure
@@ -64,11 +65,15 @@ Optionally, a cron job can be configured to periodically update the cache using 
 
 ```5 * * * * www-data cd /var/www/html; ./bin/update_cache_cli.php```
 
+If a cron job is configured, optionally edit config.php to prevent cacheing based on web requests
+
+```$update_cache_cli_only = true;```
+
 ## Data collection
 
 The software works well in conjunction with [PySQM](https://github.com/mireianievas/PySQM) performing the actual data collection.
 
 ## Acknowledgements
 
-Thanks to Bill Kowalik for sharing his regression analysis code which ours is loosely based on.
+Thanks to Bill Kowalik for sharing his regression analysis and milky way code which ours is loosely based on.
 Thanks to [suncalc-php](https://github.com/gregseth/suncalc-php).

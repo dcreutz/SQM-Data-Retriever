@@ -23,7 +23,7 @@ class SQM_Data_Attributes_Number_Readings_Module extends SQM_Data_Attributes_Mod
 	see SQM_Sun_Moon_info for details on the information attached */
 class SQM_Data_Attributes_Sun_Moon_Module extends SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		foreach ($datetimes as $key => $datetime) {
 			if (isset($attributes[$key]['sun_position']) && $attributes[$key]['sun_position']) {
@@ -60,7 +60,7 @@ class SQM_Data_Attributes_Sun_Moon_Module extends SQM_Data_Attributes_Module {
 	see config.php for configuration options */
 class SQM_Data_Attributes_Regression_Analysis_Module extends SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		$regression = SQM_Regression::compute_r_squareds($datetimes,$values,$sunset,$sunrise);
 		foreach ($datetimes as $key => $datetime) {
@@ -175,7 +175,7 @@ class SQM_Data_Attributes_Sun_Moon_Clouds_Module extends SQM_Data_Attributes_Mod
 	}
 
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		foreach ($datetimes as $key => $datetime) {
 			if (SQM_Data_Attributes_Sun_Moon_Clouds_Module::exclude($attributes[$key])) {

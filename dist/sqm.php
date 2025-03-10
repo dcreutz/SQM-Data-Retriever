@@ -32,6 +32,9 @@
 if (!isset($data_directory)) {
 	$data_directory = "data";
 }
+if (!isset($update_cache_cli_only)) {
+	$update_cache_cli_only = false;
+}
 if (!isset($read_only_mode)) {
 	$read_only_mode = false;
 }
@@ -228,9 +231,14 @@ class SQM_Cache_Factory {
 	private $cache_directory;
 	private $file_handle;
 	private $has_lock;
+	private $force_read_only;
 	
 	public static function initialize($cache_directory,$should_block) {
-		SQM_Cache_Factory::$instance = new SQM_Cache_Factory($cache_directory,$should_block);
+		SQM_Cache_Factory::$instance = new SQM_Cache_Factory($cache_directory,$should_block,false);
+	}
+	
+	public static function initialize_read_only($cache_directory) {
+		SQM_Cache_Factory::$instance = new SQM_Cache_Factory($cache_directory,false,true);
 	}
 	
 	
@@ -238,22 +246,25 @@ class SQM_Cache_Factory {
 		return !SQM_Cache_Factory::$instance->has_lock;
 	}
 	
-	private function __construct($cache_directory,$should_block) {
+	private function __construct($cache_directory,$should_block,$force_read_only) {
 		$this->has_lock = false;
 		$this->cache_directory = $cache_directory;
-		$this->file_handle =
-			fopen($this->cache_directory . DIRECTORY_SEPARATOR . ".sqm_cache_lock_file","w");
-		if ($should_block) {
-			if (flock($this->file_handle,LOCK_EX)) {
-				$this->has_lock = true;
+		$this->force_read_only = $force_read_only;
+		if (!$force_read_only) {
+			$this->file_handle =
+				fopen($this->cache_directory . DIRECTORY_SEPARATOR . ".sqm_cache_lock_file","w");
+			if ($should_block) {
+				if (flock($this->file_handle,LOCK_EX)) {
+					$this->has_lock = true;
+				} else {
+					fclose($this->file_handle);
+				}
 			} else {
-				fclose($this->file_handle);
-			}
-		} else {
-			if (flock($this->file_handle,LOCK_EX|LOCK_NB)) {
-				$this->has_lock = true;
-			} else {
-				fclose($this->file_handle);
+				if (flock($this->file_handle,LOCK_EX|LOCK_NB)) {
+					$this->has_lock = true;
+				} else {
+					fclose($this->file_handle);
+				}
 			}
 		}
 	}
@@ -269,6 +280,9 @@ class SQM_Cache_Factory {
 	}
 	
 	protected function build($sqm_id) {
+		if ($this->force_read_only) {
+			return new SQM_Cache_Read_Only($this->cache_directory . DIRECTORY_SEPARATOR . $sqm_id);
+		}
 		global $read_only_mode;
 		if ($this->has_lock && !$read_only_mode) {
 			return new SQM_Cache($this->cache_directory . DIRECTORY_SEPARATOR . $sqm_id);
@@ -830,6 +844,7 @@ class SQM_File_Manager extends SQM_Directory {
 		if ($this->file_exists(".info")) {
 			$lines = explode("\n",file_get_contents($this->file_path(".info")));
 			$elevation = null;
+			$timezone = null;
 			foreach ($lines as $line) {
 				if (str_starts_with($line,"Name: ")) {
 					$name = substr($line,6);
@@ -839,10 +854,16 @@ class SQM_File_Manager extends SQM_Directory {
 					$longitude = floatval(substr($line,11));
 				} elseif (str_starts_with($line,"Elevation: ")) {
 					$elevation = substr($line,11);
+				} elseif (str_starts_with($line,"Timezone: ")) {
+					try {
+						$timezone = new DateTimeZone(substr($line,10));
+					} catch (Exception $e) {
+						sqm_error_log("Invalid timezone " + substr($line,10));
+					}
 				}
 			}
 			if (isset($name) && isset($latitude) && isset($longitude)) {
-				return new SQM_Info($name,$latitude,$longitude,$elevation);
+				return new SQM_Info($name,$latitude,$longitude,$elevation,$timezone);
 			}
 		}
 		return null;
@@ -857,11 +878,15 @@ class SQM_File_Manager extends SQM_Directory {
 	}
 	
 	public function data_columns_for($datetime) {
+		$result = array('exists' => true);
 		foreach ($this->file_parsers as $file => $parser) {
 			$data_columns_for = $parser->data_columns_for($datetime);
 			if ($data_columns_for) {
-				return $data_columns_for;
+				$result = array_merge($result,$data_columns_for);
 			}
+		}
+		if (count($result) > 1) {
+			return $result;
 		}
 		return null;
 	}
@@ -921,7 +946,7 @@ SQM_File_Manager_Factory::initialize($path . $data_directory);
 
 abstract class SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 	}
 	
@@ -1066,7 +1091,7 @@ class SQM_Data_Attributes_Number_Readings_Module extends SQM_Data_Attributes_Mod
 
 class SQM_Data_Attributes_Sun_Moon_Module extends SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		foreach ($datetimes as $key => $datetime) {
 			if (isset($attributes[$key]['sun_position']) && $attributes[$key]['sun_position']) {
@@ -1093,7 +1118,7 @@ class SQM_Data_Attributes_Sun_Moon_Module extends SQM_Data_Attributes_Module {
 
 class SQM_Data_Attributes_Regression_Analysis_Module extends SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		$regression = SQM_Regression::compute_r_squareds($datetimes,$values,$sunset,$sunrise);
 		foreach ($datetimes as $key => $datetime) {
@@ -1202,7 +1227,7 @@ class SQM_Data_Attributes_Sun_Moon_Clouds_Module extends SQM_Data_Attributes_Mod
 	}
 
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		foreach ($datetimes as $key => $datetime) {
 			if (SQM_Data_Attributes_Sun_Moon_Clouds_Module::exclude($attributes[$key])) {
@@ -1257,7 +1282,7 @@ class SQM_Data_Attributes_Sun_Moon_Clouds_Module extends SQM_Data_Attributes_Mod
 
 class SQM_Data_Attributes_From_Data_Files extends SQM_Data_Attributes_Module {
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		foreach ($datetimes as $key => $datetime) {
 			$data_columns = $fileset->data_columns_for($datetime);
@@ -1330,7 +1355,7 @@ class SQM_Data_Attributes {
 		foreach (SQM_Data_Attributes::$modules as $module) {
 			$module::add_attributes_from(
 				$attributes,$datetimes,$values,$sunset,$sunrise,
-				$this->sqm_sun_moon_info,$this->fileset
+				$this->sqm_sun_moon_info,$this->fileset,$this->sqm_data->sqmid()
 			);
 		}
 		return $attributes;
@@ -1588,6 +1613,8 @@ abstract class SQM_Fileset_Implementation implements SQM_Fileset {
 
 
 abstract class SQM_Data {
+	public abstract function sqmid();
+
 	
 	public abstract function dates();
 	
@@ -1699,11 +1726,17 @@ class SQM_Data_In_Memory extends SQM_Data {
 	public $datetimes_by_date;
 	public $values_by_date;
 	public $attributes_by_date;
+	private $sqm_id;
 	
-	public function __construct() {
+	public function __construct($sqm_id = ".") {
+		$this->sqm_id = $sqm_id;
 		$this->datetimes_by_date = array();
 		$this->values_by_date = array();
 		$this->attributes_by_date = array();
+	}
+	
+	public function sqmid() {
+		return $this->sqm_id;
 	}
 	
 	
@@ -1796,7 +1829,7 @@ class SQM_Data_In_Memory_Factory extends SQM_Data_Factory {
 	}
 	
 	protected function build_sqm_data($sqm_id) {
-		return new SQM_Data_In_Memory();
+		return new SQM_Data_In_Memory($sqm_id);
 	}
 	
 	protected function build_best_nightly_data($sqm_id) {
@@ -2498,9 +2531,22 @@ if ($add_raw_data === true) {
 $cacheing_enabled = false;
 if (isset($cache_directory) && $cache_directory) {
 	$cache_directory_path = $path . $cache_directory;
-	if ((is_dir($cache_directory_path)) && (is_writeable($cache_directory_path))) {
-		$cacheing_enabled = true;
-		SQM_Cache_Factory::initialize($cache_directory_path,$should_block_for_cacheing);
+	if (is_dir($cache_directory_path)) {
+		if (($update_cache_cli_only === true) && (!isset($is_cli) || ($is_cli !== true))) {
+			SQM_Cache_Factory::initialize_read_only($cache_directory_path);
+			$cacheing_enabled = true;
+		} else {
+			if (is_writeable($cache_directory_path)) {
+				SQM_Cache_Factory::initialize($cache_directory_path,$should_block_for_cacheing);
+				$cacheing_enabled = true;
+			} else {
+				sqm_error_log("Cache directory is not writeable");
+			}
+		}
+	} else {
+		sqm_error_log("Cache directory is not a directory");
+	}
+	if ($cacheing_enabled) {
 		if (SQM_Cache_Factory::is_read_only()) {
 			$read_only_mode = true;
 		}
@@ -2509,10 +2555,16 @@ if (isset($cache_directory) && $cache_directory) {
 
 
 class SQM_Data_On_Disk extends SQM_Data {
+	private $sqm_id;
 	private $cache;
 	
-	public function __construct($cache) {
+	public function __construct($sqm_id,$cache) {
+		$this->sqm_id = $sqm_id;
 		$this->cache = $cache;
+	}
+	
+	public function sqmid() {
+		return $this->sqm_id;
 	}
 	
 	public function dates() {
@@ -2580,7 +2632,7 @@ class SQM_Data_On_Disk_Factory extends SQM_Data_Factory {
 	}
 
 	protected function build_sqm_data($sqm_id) {
-		return new SQM_Data_On_Disk(SQM_Cache_Factory::create($sqm_id . "_all"));
+		return new SQM_Data_On_Disk($sqm_id,SQM_Cache_Factory::create($sqm_id . "_all"));
 	}
 	
 	protected function build_best_nightly_data($sqm_id) {
@@ -2657,8 +2709,6 @@ class SQM_File_Readings_Cache_On_Disk_Factory extends SQM_File_Readings_Cache_Fa
 				SQM_Data_Attributes_From_Data_Files::class
 			);
 		}
-	} else {
-		sqm_error_log("SQM Cache directory is not a directory or is not writeable");
 	}
 }
 
@@ -2697,11 +2747,15 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 	}
 	
 	
-	private static function build_file_list($date,$timezone) {
-		if (!isset(SQM_Data_Attributes_Images_Module::$image_file_datetimes[$date])) {
-			SQM_Data_Attributes_Images_Module::$image_file_datetimes[$date] = array();
+	private static function build_file_list($sqm_id,$date,$timezone) {
+		if (!isset(SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id])) {
+			SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id] = array();
+		}
+		if (!isset(SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$date])) {
+			SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$date] = array();
 			$directory = SQM_Data_Attributes_Images_Module::$image_directory . 
-				DIRECTORY_SEPARATOR . substr($date,0,7) . DIRECTORY_SEPARATOR . $date;
+				DIRECTORY_SEPARATOR . $sqm_id . DIRECTORY_SEPARATOR . 
+				substr($date,0,7) . DIRECTORY_SEPARATOR . $date;
 			if (file_exists($directory) && is_dir($directory)) {
 				global $image_name_format;
 				global $image_name_prefix_length;
@@ -2717,7 +2771,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 					
 					
 					if ($datetime) {
-						SQM_Data_Attributes_Images_Module::$image_file_datetimes[$date]
+						SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$date]
 							[$file] = $datetime;
 					} else {
 						sqm_error_log("Could not format datetime from " . $file);
@@ -2730,12 +2784,12 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 	private static $old_time;
 
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		$sunset_date = $sunset->format("Y-m-d");
 		$sunrise_date = $sunrise->format("Y-m-d");
-		SQM_Data_Attributes_Images_Module::build_file_list($sunset_date,$sunset->getTimezone());
-		SQM_Data_Attributes_Images_Module::build_file_list($sunrise_date,$sunrise->getTimezone());
+		SQM_Data_Attributes_Images_Module::build_file_list($sqm_id,$sunset_date,$sunset->getTimezone());
+		SQM_Data_Attributes_Images_Module::build_file_list($sqm_id,$sunrise_date,$sunrise->getTimezone());
 		foreach ($datetimes as $key => $datetime) {
 			if (isset($attributes[$key]['image']) && $attributes[$key]['image']) {
 				continue;
@@ -2743,7 +2797,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 			$closest_datetime = SQM_Data_Attributes_Images_Module::$old_time;
 			$closest_file = null;
 			$closest_date = $sunset_date;
-			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sunset_date] as 
+			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$sunset_date] as 
 					$file => $dt) {
 				if (abs(intval($dt->format("U")) - intval($datetime->format("U"))) <
 					abs(intval($closest_datetime->format("U")) - intval($datetime->format("U")))) {
@@ -2751,7 +2805,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 						$closest_file = $file;
 				}
 			}
-			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sunrise_date] as 
+			foreach (SQM_Data_Attributes_Images_Module::$image_file_datetimes[$sqm_id][$sunrise_date] as 
 					$file => $dt) {
 				if (abs(intval($dt->format("U")) - intval($datetime->format("U"))) <
 					abs(intval($closest_datetime->format("U")) - intval($datetime->format("U")))) {
@@ -2768,6 +2822,7 @@ class SQM_Data_Attributes_Images_Module extends SQM_Data_Attributes_Module {
 					$image_time_frame)) {
 				$attributes[$key]['image'] = 
 					SQM_Data_Attributes_Images_Module::$image_directory_url
+					. DIRECTORY_SEPARATOR . $sqm_id
 					. DIRECTORY_SEPARATOR . substr($closest_date,0,7) . DIRECTORY_SEPARATOR .
 					$closest_date . DIRECTORY_SEPARATOR . $closest_file;
 			} else {
@@ -2816,7 +2871,7 @@ class SQM_Data_Attributes_Resize_Images_Module extends SQM_Data_Attributes_Modul
 		sqm_error_log("Resizing image " . $image_path,2);
 		global $extended_time;
 		if ($extended_time) {
-			set_time_limit(30);
+			set_time_limit(300);
 		}
 		$path = SQM_Data_Attributes_Resize_Images_Module::extract_path($resized_path);
 		if (!is_dir($path)) {
@@ -2834,7 +2889,7 @@ class SQM_Data_Attributes_Resize_Images_Module extends SQM_Data_Attributes_Modul
 	}
 	
 	public static function add_attributes_from(
-		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset
+		&$attributes,$datetimes,$values,$sunset,$sunrise,$sqm_sun_moon_info,$fileset,$sqm_id
 	) {
 		global $resized_widths;
 		$resized_name = array_key_first($resized_widths);
@@ -3701,7 +3756,7 @@ class SQM_Dataset_Manager_Implementation implements SQM_Dataset_Manager {
 		global $extended_time;
 		foreach ($files as $file) {
 			if ($extended_time) {
-				set_time_limit(30);
+				set_time_limit(300);
 			}
 			$changed_readings = $this->fileset->new_readings_from($file);
 			if ($changed_readings) {
