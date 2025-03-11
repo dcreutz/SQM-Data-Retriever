@@ -8,6 +8,8 @@ Designed as the backend for the [SQM Visualizer](https://github.com/dcreutz/SQM-
 
 The SQM Data Retriever software is free and open-source, provided as-is and licensed under the GNU Affero General Public License version 3, or (at your option) any later version.  The sofware was designed and developed by Darren Creutz.
 
+PHP version 8 or higher is required.
+
 ## Installation
 
 1. Download the SQM Data Retriever by clicking on the Code button at the top right and choosing Download Zip.
