@@ -12,8 +12,13 @@
 	note: it will block until it obtains the cache lock
 	and the cache will not be cleared if an error occurs */
 
+if (PHP_VERSION_ID < 80000) {
+	echo "PHP version 8 or later is required\n";
+	exit();
+}
+
 if (php_sapi_name() != 'cli') {
-	echo "This script is for the command line";
+	echo "This script is for the command line\n";
 	exit();
 }
 
@@ -21,7 +26,7 @@ function sqm_error_log($msg) {
 	echo $msg . "\n";
 }
 if (!file_exists("sqm.php")) {
-	echo "This script must be run from the directory containing config.php";
+	echo "This script must be run from the directory containing config.php\n";
 	exit();
 }
 

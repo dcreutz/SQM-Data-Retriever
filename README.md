@@ -16,11 +16,11 @@ PHP version 8 or higher is required.
 
 2. Extract the zip file and move the contents of the subfolder dist to a location on your web server of your choice.  That is, the directory on your server should have (at least) the same contents as the extracted dist folder.
 
-3. Create a directory 'data' in the same directory as sqm.php, then copy (or symlink) your SQM data files into the data directory.  (The location of the data directory can be changed in config.php, see the [configuration instructions](config.MD) for more information).
+3. Create a directory 'data' in the same directory as sqm.php, then copy (or symlink) your SQM data files into the data directory.  (The location of the data directory can be changed in config.php, see the [configuration instructions](config.md) for more information).
 
 4. [Recommended] Create a directory 'cache' in the same directory.  Make the cache directory writeable by the web server user.  On a typical linux system, this means running chown to set the owner of the cache folder to www or www-data.
 
-5. [Optional] If you have a camera taking images of the sky, create an 'images' directory, then copy (or symlink) the images in to the images directory.  The directory structure expected is images/YYYY-MM/YYYY-MM-DD/image-YYYYMMDDHHiiss.jpg, see the [configuration instructions](config.MD) for information.
+5. [Optional] If you have a camera taking images of the sky, create an 'images' directory, then copy (or symlink) the images in to the images directory.  The directory structure expected is images/YYYY-MM/YYYY-MM-DD/image-YYYYMMDDHHiiss.jpg, see the [configuration instructions](config.md) for information.
 
 6. [Optional] If you have images and would like the backend to automatically create thumbnails, create a 'resized_images' directory writeable by the web server user.
 

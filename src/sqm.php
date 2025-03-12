@@ -23,7 +23,12 @@
 		then passes the request to the responder
 		and finally outputs javascript for the preloaded response
 	*/
-	
+
+if (PHP_VERSION_ID < 80000) {
+	echo json_encode(array('response'=>array('fail'=>true,'code'=>'oldphp','message'=>"PHP version 8 or later is required for the server backend")));
+	exit();
+}
+
 require_once('load_config.php');
 
 if (isset($info_and_readings_preload) && $info_and_readings_preload === true) {
