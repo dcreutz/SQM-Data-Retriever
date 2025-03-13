@@ -73,6 +73,8 @@ If a cron job is configured, optionally edit config.php to prevent cacheing base
 
 ## Data collection
 
+For SQM-LE devices, the [sqm_read](https://github.com/dcreutz/sqm_read) package is a minimal tool to generate data files.
+
 The software works well in conjunction with [PySQM](https://github.com/mireianievas/PySQM) performing the actual data collection.
 
 ## Acknowledgements
